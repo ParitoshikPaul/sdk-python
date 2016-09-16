@@ -1,0 +1,17 @@
+<div class="header">
+	<div class="clearfix">
+		<h3 class="text-success">Verizon Cloud File Explorer</h3>
+	</div>
+</div>
+<div class="body nav-links">
+	<a ng-class="{active : path == '/files'}" ng-click="go('/files')" class="btn btn-primary btn-block">All of my files</a>
+	<a ng-class="{active : path == '/explorer'}" ng-click="go('/explorer')" class="btn btn-primary btn-block">File explorer</a>
+	<a ng-class="{active : path == '/contacts'}" ng-click="go('/contacts')" class="btn btn-primary btn-block">Contacts</a>
+	<a ng-class="{active : path.startsWith('/playlists')}" ng-click="go('/playlists')" class="btn btn-primary btn-block">Playlists</a>
+	<a ng-class="{active : path == '/trash'}" ng-click="go('/trash')" class="btn btn-primary btn-block">Trash</a>
+	<a ng-class="{active : path == '/shares'}" ng-click="go('/shares')" class="btn btn-primary btn-block">Shares</a>
+
+</div>
+<div class="footer">
+	<a class="btn btn-primary btn-block withripple" ng-click="go('/')">Logout</a>
+</div>

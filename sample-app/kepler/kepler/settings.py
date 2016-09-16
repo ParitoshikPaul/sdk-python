@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'explorer.apps.ExplorerConfig',
     'oauth2.apps.Oauth2Config',
     'django.contrib.admin',
     'django.contrib.auth',

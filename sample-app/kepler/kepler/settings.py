@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'kepler.middleware.cloud_injector.inject_cloud'
 ]
 
 ROOT_URLCONF = 'kepler.urls'

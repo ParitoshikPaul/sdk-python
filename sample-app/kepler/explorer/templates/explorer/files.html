@@ -14,15 +14,14 @@
         <div class="content-main">
           <usage></usage>
           <uploader></uploader>
-          <div class="text-info" ng-show="loading">
-            <h2>Loading...</h2>
-          </div>
-          <div ng-repeat="file in files" class="file-row">
+          {% for file in fullview.data.file %}
+          <div class="file-row">
             <a ng-href="cloud.getDownloadUrl(file.parentPath + '/' + file.name)" class="text-info">
               <i class="material-icons">insert_drive_file</i>
-              file.name
+              {{file.name}}
             </a>
           </div>
+          {% endfor %}
         </div>
       </div>
     </div>

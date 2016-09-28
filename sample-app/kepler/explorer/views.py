@@ -1,7 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-def index(request):
-    return render(request, 'explorer/explorer.html', {})
 
 def files(request):
-    return render(request, 'explorer/files.html', {})
+
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    fullview = request.cloud.fullview()
+    print(fullview)
+
+    return render(request, 'explorer/files.html', {'fullview' : fullview})

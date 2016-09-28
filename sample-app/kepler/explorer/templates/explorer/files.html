@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<div ng-controller="filesController">
-  <div class="container-fluid">
+<div class="container-fluid">
     <div class="row">
       <div class="col-md-2 side">
         {% include "sidenav.html" %}
       </div>
       <div class="col-md-10 col-md-offset-2 main">
-        <app-navbar></app-navbar>
+        {% include "appnav.html" %}
         <div class="files-header">
           <h1 class="text-info">All Of My Files</h1>
         </div>
         <div class="content-main">
-          <usage></usage>
-          <uploader></uploader>
           {% for file in fullview.data.file %}
           <div class="file-row">
-            <a ng-href="cloud.getDownloadUrl(file.parentPath + '/' + file.name)" class="text-info">
+            <a href="#" class="text-info">
               <i class="material-icons">insert_drive_file</i>
               {{file.name}}
             </a>
@@ -25,6 +22,5 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 {% endblock %}

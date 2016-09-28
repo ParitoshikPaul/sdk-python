@@ -8,11 +8,11 @@ def inject_cloud(get_response):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        #inject the cloud
+        # inject the cloud
         cloud = Cloud(
             client_key='KHFh8IEPpWF6p3elo6xMBNT5jyQa',
             client_secret='MNxyUF2TQVTcZzI_z_mhHM3DZ3Qa',
-            callback_url='http://127.0.0.1:8000/oauth2/token',
+            callback_url='http://127.0.0.1:8000/token',
             auth_token=request.session.get('auth_token', None),
             refresh_token=request.session.get('refresh_token', None),
         )

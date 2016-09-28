@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'', include('oauth2.urls')),
     url(r'^explorer/', include('explorer.urls')),
-    url(r'^oauth2/', include('oauth2.urls')),
     url(r'^admin/', admin.site.urls),
 ]

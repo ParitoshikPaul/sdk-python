@@ -9,13 +9,15 @@ class Cloud:
                  client_secret,
                  callback_url,
                  auth_token=None,
-                 refresh_token=None
+                 refresh_token=None,
+                 expires_in=None,
                  ):
         self.client_key = client_key
         self.client_secret = client_secret
         self.callback_url = callback_url
         self.auth_token = auth_token
         self.refresh_token = refresh_token
+        self.expires_in = expires_in
 
         # authenticated if we have an auth token
         self.authenticated = self.auth_token is not None
@@ -49,10 +51,14 @@ class Cloud:
         prepped = req.prepare()
 
         resp = s.send(prepped);
+        json = resp.json()
 
-        #need to set tokens here
+        # set the oauth tokens in the sdk
+        self.auth_token = json.get('auth_token', None)
+        self.refresh_token = json.get('refresh_token', None)
+        self.expires_in = json.get('expires_in', None)
 
-        return resp.json()
+        return json
 
     def fullview(self):
         if not self.authenticated:

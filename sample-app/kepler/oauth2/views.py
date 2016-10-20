@@ -14,6 +14,9 @@ def token(request):
     token_response = request.cloud.token(request.GET.get('code'))
     print(token_response)
 
+    if token_response.get('access_token', None) is None:
+        return render(request, 'oauth2/login.html', {'login_error': True})
+
     request.session['auth_token'] = token_response.get('access_token')
     request.session['refresh_token'] = token_response.get('refresh_token')
 

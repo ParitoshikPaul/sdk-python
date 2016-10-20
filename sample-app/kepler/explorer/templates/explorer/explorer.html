@@ -1,37 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
-<div ng-controller="metadataController">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-2 side">
-        {% include "sidenav.html" %}
-      </div>
-      <div class="col-md-10 col-md-offset-2 main">
-        <app-navbar></app-navbar>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 side">
+      {% include "sidenav.html" %}
+    </div>
+    <div class="col-md-10 col-md-offset-2 main">
+      {% include "appnav.html" %}
 
-        <ul class="breadcrumb files-breadcrumb">
-          <li ng-repeat="filePath in filePaths"><a class="text-info" ng-click="cd(filePath)">pathToFolderString(filePath)</a></li>
-        </ul>
-        <div class="content-main">
-          <div class="text-info" ng-show="loading">
-            <h2>Loading...</h2>
-          </div>
-          <div ng-show="!files.length && !folders.length && !loading">
-            <h3 class="text-info">This folder is empty</h3>
-          </div>
-          <div ng-repeat="folder in folders" class="file-row">
-
-            <a href="javascript:void(0)" class="text-info" ng-click="cd(path + folder.name + '/')">
-              <i class="material-icons">folder_open</i>
-              folder.name
-            </a>
-          </div>
-          <div ng-repeat="file in files" class="file-row">
-            <a class="text-info" ng-click="cloud.download(path + file.name)">
-              <i class="material-icons">insert_drive_file</i>
-              file.name
-            </a>
-          </div>
+      <ul class="breadcrumb files-breadcrumb">
+        <li>
+          <a class="text-info" href="#">/</a></li>
+      </ul>
+      <div class="content-main">
+        <div>
+          <h3 class="text-info">This folder is empty</h3>
+        </div>
+        <div class="file-row">
+          <a href="#" class="text-info">
+            <i class="material-icons">folder_open</i>
+            folder.name
+          </a>
+        </div>
+        <div class="file-row">
+          <a class="text-info" href="#">
+            <i class="material-icons">insert_drive_file</i>
+            file.name
+          </a>
         </div>
       </div>
     </div>

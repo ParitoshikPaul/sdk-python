@@ -1,12 +1,12 @@
 import requests
 import urllib
 
-class RESTClient():
+class RESTClient:
     """
     Class to handle all REST API Calls
     """
 
-    def __init__(self, base_url, versioninfo):
+    def __init__(self):
         """
         Initiate Client with the base url of the API and the
         version information.
@@ -16,17 +16,16 @@ class RESTClient():
             versioninfo - (str) The version component to add to base_url
         """
 
-        self.base_url = base_url
-        self.version_info = version_info
-        self.http_functions
+        #self.base_url = base_url
+        #self.version_info = version_info
         self.http_functions = {
             'GET'   : self.get,
             'POST'  : self.post,
             'PUT'   : self.put,
-            'HEAD'  : self.head,
+            'DELETE'  : self.delete,
         }
 
-    def http_request(self, url_component, request_type, params):
+    def http_request(self, url_component, request_type, params, is_json= False):
         """
         Make the API Call according to the URL component
         provided and the request type.
@@ -36,14 +35,14 @@ class RESTClient():
             reqType - (str) The HTTP Request type (GET/POST/HEAD/PUT/DELE)
             params - (dict) The parameters to pass in the http call
         """
-        call_url = self.base_url + self.version_info + url_component
+        call_url = url_component
 
         if request_type not in self.http_functions:
             return {
                 'http_status'   : 0,
                 'error_string'  : 'Invalid HTTP method',
                 'data'          : [],
-                'error_info'    : 'Invalid HTTP method used, must be of type
+                'error_info'    : 'Invalid HTTP method used, must be of type \
                 GET/POST/PUT',
             }
         return self.http_functions[request_type](call_url, params)
@@ -56,12 +55,13 @@ class RESTClient():
             call_url    - (str) The API URL to call
             params      - (dict) Parameters to  place in the call
         """
-
+        print call_url
+        print params
         try:
             response = requests.get(call_url, params=params)
         except requests.exceptions.RequestException as e:
             return {
-                'http_status'   : 0
+                'http_status'   : 0,
                 'error_string'  : 'An unkown error occured',
                 'data'          : [],
                 'error_info'    : str(e),
@@ -89,7 +89,7 @@ class RESTClient():
             response = requests.post(call_url, data=params)
         except requests.exceptions.RequestException as e:
             return {
-                'http_status'   : 0
+                'http_status'   : 0,
                 'error_string'  : 'An unkown error occured',
                 'data'          : [],
                 'error_info'    : str(e),
@@ -117,7 +117,7 @@ class RESTClient():
             response = requests.put(call_url, data=params)
         except requests.exceptions.RequestException as e:
             return {
-                'http_status'   : 0
+                'http_status'   : 0,
                 'error_string'  : 'An unkown error occured',
                 'data'          : [],
                 'error_info'    : str(e),
@@ -145,7 +145,7 @@ class RESTClient():
             response = requests.get(call_url)
         except requests.exceptions.RequestException as e:
             return {
-                'http_status'   : 0
+                'http_status'   : 0,
                 'error_string'  : 'An unkown error occured',
                 'data'          : [],
                 'error_info'    : str(e),

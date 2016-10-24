@@ -1,5 +1,0 @@
-from Sdk import Sdk
-
-s = Sdk()
-r = '6ONKAOIUP7BNXF5A4J725FAL64EGTOJ3ITEOIZCT2WGQZYZNTAZIJNJOOOCSWKKE'
-print s.refreshToken(r)

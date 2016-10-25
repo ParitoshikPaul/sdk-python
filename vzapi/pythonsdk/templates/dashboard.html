@@ -1,0 +1,97 @@
+
+{% include "header.html" %}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-2 side">
+            {% include "sidebar.html" %}
+		</div>
+		<div class="col-md-10 col-md-offset-2 main">
+			<div class="navbar navbar-inverse mbot0">
+                {% include "navbar.html" %}
+			</div>
+			<div class="files-header">
+				<h1 class="text-info">All Of My Files</h1>
+			</div>
+			<div class="addnew file-row"> <input type="button" value="Delta View"  data-toggle="modal" data-target="#delta-dialog" title="Add Item" > </div>
+			<div class="content-main">
+				<!--Usage block -->
+				<h4>
+                    <span class="label label-primary"> Used
+                        {{account.data.usage.quotaUsed}} of
+                        {{account.data.usage.quota}} </span>
+				</h4>
+				<div class="progress progress-striped active mtop30 usage">
+					<div class="progress-bar" style="width: <?php  echo (($accountinfo['usage']['quotaUsed']/$accountinfo['usage']['quota'])*100); ?>%"></div>
+				</div>
+				<!-- end of the usage block -->
+
+				<?php if(isset($_POST['action']) && $_POST['action'] == 'deltacall'): ?>
+					<!-- start of Delta call -->
+					<?php if(!is_array($deltaData)):  ?>
+					<div class="file-row">
+						<?php echo $deltaData; ?>
+					</div>
+					<?php endif; ?>
+					<?php foreach($deltaData as $filedata):  ?>
+						<?php if(isset($filedata['folder'])): ?>
+							<?php foreach($filedata['folder'] as $folderlist):  ?>
+							<div class="file-row">
+								<a href="javascript:void(0)" class="text-info">
+									<i class="material-icons">folder_open</i>
+									<?php echo htmlspecialchars($folderlist['name']); ?>
+								</a>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+						<?php if(isset($filedata['file'])): ?>
+							<?php foreach($filedata['file'] as $filelist):  ?>
+							<div class="file-row">
+								<a href="javascript:void(0)" class="text-info">
+									<i class="material-icons">insert_drive_file</i>
+									<?php echo htmlspecialchars($filelist['name']); ?>
+								</a>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					<?php endforeach; ?>
+					
+					<!-- end of Delta call output -->
+				<?php else: ?>
+					<!-- file loop start here -->
+					
+					<?php foreach($getAllFiles as $filedata): ?>
+						<?php if(isset($filedata['folder'])): ?>
+							<?php foreach($filedata['folder'] as $folderlist):  ?>
+							<div class="file-row">
+								<a href="javascript:void(0)" class="text-info">
+									<i class="material-icons">folder_open</i>
+									<?php echo htmlspecialchars($folderlist['name']); ?>
+								</a>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+						<?php if(isset($filedata['file'])): ?>
+							<?php foreach($filedata['file'] as $filelist):  ?>
+							<div class="file-row">
+								<a href="javascript:void(0)" class="text-info">
+									<i class="material-icons">insert_drive_file</i>
+									<?php echo htmlspecialchars($filelist['name']); ?>
+								</a>
+							</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					<?php endforeach; ?>
+					
+					<!-- end of the file loop start here -->
+				<?php endif; ?>
+				
+
+				
+				
+			</div>
+		</div>
+	</div>
+</div>
+</body></html>
+

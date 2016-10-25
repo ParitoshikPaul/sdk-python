@@ -43,22 +43,25 @@
 		        <h1>Kepler Cloud File Explorer</h1>
 		      </div>
 		      <div class="body">
-		        <p class="mtop30">The Kepler Cloud File Explorer is a demo project that leverages the <a href="https://thingspace.verizon.com/developer/apis#/vzcloud/index.html" target="_blank"><b>Php Cloud SDK</b></a> to authenticate and display a user's Cloud contents.  The demo is built using <a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a>, <a href="https://secure.php.net/" target="_blank">Php</a>, and styled with <a href="http://fezvrasta.github.io/bootstrap-material-design/" target="_blank">Bootstrap Material Design</a>.</p>
+		        <p class="mtop30">The Kepler Cloud File Explorer is a demo
+                project that leverages the <a
+                href="https://thingspace.verizon.com/developer/apis#/vzcloud/index.html"
+            target="_blank"><b>Python Cloud SDK</b></a> to authenticate and display a user's Cloud contents.  The demo is built using <a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a>, and styled with <a href="http://fezvrasta.github.io/bootstrap-material-design/" target="_blank">Bootstrap Material Design</a>.</p>
 
 		        <p class="mtop30">
-		          <a class="btn btn-primary btn-xlg btn-raised" href="/auth">
+		          <a class="btn btn-primary btn-xlg btn-raised"
+                      href="/authenticate">
 		            <i class="material-icons">cloud_circle</i> Sign in with Verizon Cloud
 		          </a>
 		        </p>
 		      </div>
 		    </div>
-		    <?php if(isset($error)): ?>
+            {% if not_authorized %}
 		    <div class="alert alert-dismissible alert-danger">
 		      <button type="button" class="close" data-dismiss="alert">×</button>
-		      <strong>Could not authenticate</strong>
-			  <?php echo $error; ?>
+		      <strong>Not authenticated</strong>
 		    </div>
-			<?php endif; ?>
+            {% endif %}
 		  </div>
 		</div>
 	  </div><!-- /.container -->

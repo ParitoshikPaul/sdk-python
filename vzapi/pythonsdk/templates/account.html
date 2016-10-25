@@ -1,0 +1,54 @@
+{% include "header.html" %}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-2 side">
+            {% include "sidebar.html" %}
+		</div>
+		<div class="col-md-10 col-md-offset-2 main">
+			<div class="navbar navbar-inverse mbot0">
+                {% include "navbar.html" %}
+			</div>
+			<div class="files-header">
+				<h1 class="text-info">Account Details</h1>
+			</div>
+			<div class="content-main">
+				<!--Usage block -->
+				<h4>
+                    <span class="label label-primary"> Used
+                        {{account.data.usage.quotaUsed}} of
+                        {{account.data.usage.quota}} </span>
+				</h4>
+				<!-- end of the usage block -->
+
+
+				<div class="file-row">
+						
+                    Quota: {{account.data.usage.quota}}					   
+				</div>
+				<div class="file-row">
+						
+                    Quota Used: {{account.data.usage.quotaUsed}}
+					   
+				</div>
+				<div class="file-row">
+						
+                    Id: {{account.data.id}}
+					    
+				</div>
+				<?php if(isset($accountinfo['alias'])): ?>
+				<div class="file-row">
+						
+							Alias: <?php echo $accountinfo['alias']; ?>
+					    
+				</div>
+				<?php endif; ?>
+
+
+		
+				
+			</div>
+		</div>
+	</div>
+</div>
+</body></html>

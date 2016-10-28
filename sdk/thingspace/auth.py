@@ -1,8 +1,7 @@
-#To do: move constants to conf
-
 from api import cloud
 from urllib import urlencode
 from RESTClient import RESTClient
+
 class auth(cloud):
     """
     The main auth class. Includes functions for authorization
@@ -11,9 +10,6 @@ class auth(cloud):
 
     def __init__(self):
         cloud.__init__(self)
-
-    def testauth(self):
-        return "test"
 
     def authorize(self):
         """
@@ -33,12 +29,13 @@ class auth(cloud):
         """
 
         payload = {
-            'client_id' : self.client_id,
+            'client_id' : self.client_key,
             'client_secret' : self.client_secret,
             'code' : code,
             'grant_type': 'authorization_code',
             'redirect_uri' : self.callback_url,
         }
+        #return str(payload)
         return self.rest_client.http_request(self.auth_url+ 'token', 'POST',
                                             payload)
 
@@ -50,8 +47,8 @@ class auth(cloud):
             refresh_token   - (str) The Refresh token
         """
         payload = {
-            'client_id' : client_id,
-            'client_secret' : client_secret,
+            'client_id' : self.client_key,
+            'client_secret' : self.client_secret,
             'refresh_token' : refresh_token,
             'grant_type': 'refresh_token',
             'redirect_uri' : self.callback_url,

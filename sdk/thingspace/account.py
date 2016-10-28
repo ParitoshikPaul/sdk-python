@@ -7,10 +7,8 @@ class account(cloud):
         cloud.__init__(self)
         self.access_token = access_token
         self.destination_url = destination_url
-        self.rest_client = RESTClient()
 
     def getaccount(self):
         return self.rest_client.get(self.destination_url, {}, {'Authorization':  'Bearer ' +
                                                    self.access_token})
-
 

@@ -4,11 +4,12 @@ from RESTClient import RESTClient
 
 class cloud():
     def __init__(self):
-        self.client_id = None
+        self.client_key = None
         self.client_secret = None
         self.callback_url = None
         self.auth_url = None
         self.api_url = None
+        self.api_version = "1"
         self.token_file = None
         self.refresh_token = None
         self.access_token = None
@@ -26,6 +27,7 @@ class cloud():
         self.callback_url = callback_url
         self.auth_url = auth_url
         self.api_url = api_url
+        self.api_version = api_version
 
         return True
 

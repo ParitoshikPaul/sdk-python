@@ -47,7 +47,7 @@ class RESTClient:
             }
         return self.http_functions[request_type](call_url, params)
 
-    def get(self, call_url, params):
+    def get(self, call_url, params, headers=None):
         """
         Make a GET request on the API.
 
@@ -55,10 +55,8 @@ class RESTClient:
             call_url    - (str) The API URL to call
             params      - (dict) Parameters to  place in the call
         """
-        print call_url
-        print params
         try:
-            response = requests.get(call_url, params=params)
+            response = requests.get(call_url, params=params, headers=headers)
         except requests.exceptions.RequestException as e:
             return {
                 'http_status'   : 0,
@@ -76,7 +74,7 @@ class RESTClient:
             'error_info'     : '',
         }
 
-    def post(self, call_url, params):
+    def post(self, call_url, params, headers=None):
         """
         Make a POST request on the API.
 
@@ -86,7 +84,7 @@ class RESTClient:
         """
 
         try:
-            response = requests.post(call_url, data=params)
+            response = requests.post(call_url, data=params, headers=headers)
         except requests.exceptions.RequestException as e:
             return {
                 'http_status'   : 0,

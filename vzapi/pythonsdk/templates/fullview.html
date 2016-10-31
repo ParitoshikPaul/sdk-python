@@ -22,7 +22,7 @@
 				</h4>
                 {% for d in fullview.data.data.folder %}
                 <div class="file-row">
-                    <a href="/workon/{{d.parentPath}}/{{d.name}}" class="text-info">
+                    <a href="/workon{{d.parentPath}}/{{d.name}}" class="text-info">
                        <i class="material-icons">folder_open</i>
                        {{d.name}}
                     </a>
@@ -33,7 +33,7 @@
 
                 {%for f in fullview.data.data.file %}
                 <div class="file-row">
-                    <a href="javascript:void(0)" class="text-info">
+                    <a href="/workon/{{f.parentPath}}/{{f.name}}" class="text-info">
                        <i class="material-icons">insert_drive_file</i>
                        {{f.name}}
                     </a>

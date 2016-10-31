@@ -34,7 +34,7 @@ def index(request):
         del request.session['access_token']
         refresh_data = auth_object.refreshToken(request.session.get('refresh_token'))
         if refresh_data['http_status'] is not 200:
-            self.authenticate(request)
+            authenticate(request)
         request.session['access_token'] = refresh_data['access_token']
         request.session['refresh_token'] = refresh_data['refresh_token']
         request.session['expires_in'] = refresh_data['expires_in']
@@ -103,11 +103,30 @@ def authenticate(request):
     #return HttpResponse(auth_object.authorize())
 
 def workon(request, filename):
+    #return HttpResponse("foo")
     fops_object = fops(request.session.get('access_token'), settings.API_URL +
                        settings.VERSION)
-    fileview  = fops_object.fileview()
+    fileview_response  = fops_object.fileview(filename)
+    #return HttpResponse(str(fileview_response))
     context = {
-        'fileview': fileview
+        'fileview': fileview_response
     }
     return render(request, 'fileview.html', context)
 # Create your views here.
+
+def trash(request, virtualfolder):
+    fops_object = fops(request.session.get('access_token'), settings.API_URL +
+                       settings.VERSION)
+    trash_response = fops_object.gettrash(virtualfolder)
+    return HttpResponse(str(trash_response))
+
+def getfile(request, filename):
+    fops_object = fops(request.session.get('access_token'), settings.API_URL +
+                       settings.VERSION)
+    getfile_response  = fops_object.getfile(filename)
+    return HttpResponse(getfile_response)
+
+def newfileview(request, filename):
+    fops_object = fops(request.session.get('access_token'), settings.API_URL +
+                       settings.VERSION)
+    return HttpResponse(fops_object.newfileview())

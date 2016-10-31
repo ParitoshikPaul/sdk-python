@@ -1,6 +1,6 @@
-import requests, json
+import json
 import sys
-from RESTClient import RESTClient
+from .RESTClient import RESTClient
 
 class cloud():
     def __init__(self):
@@ -71,7 +71,7 @@ class cloud():
                 'refresh_token': self.refresh_token,
                 'access_token': self.access_token,
                 'token_expires': self.token_expires,
-                }
+        }
         file_handle.write(json.dumps(token_data))
 
         return True

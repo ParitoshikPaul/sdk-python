@@ -1,6 +1,10 @@
-from api import cloud
-from urllib import urlencode
-from RESTClient import RESTClient
+from .api import cloud
+try:
+    from urllib import urlencode
+except:
+    from urllib.parse import urlencode
+
+from .RESTClient import RESTClient
 
 class auth(cloud):
     """

@@ -11,14 +11,12 @@
 	</div>
 </div>
 <div class="body nav-links">
-	<a  class="btn btn-primary btn-block <?php
-        if(strpos($_SERVER['REQUEST_URI'], 'account.php') !== false):
-        ?>active<?php endif; ?>" href="accountusage">Account</a>
-	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'search_form.php') !== false): ?>active<?php endif; ?>" href="search_form.php">Search</a>
-	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'dashboard.php') !== false): ?>active<?php endif; ?>" href="dashboard.php">All of my files</a>
-	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'file-explorer.php') !== false): ?>active<?php endif; ?>"  href="file-explorer.php">File explorer</a>
-	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'playlist_form.php') !== false): ?>active<?php endif; ?>"  href="playlist_form.php">Playlists</a>
-	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'contact.php') !== false): ?>active<?php endif; ?>" href="contact.php">Contacts</a>
+	<a  class="btn btn-primary btn-block>" href="accountusage">Account</a>
+	<a  class="btn btn-primary btn-block>" href="search_form">Search</a>
+	<a  class="btn btn-primary btn-block>" href="dashboard">All of my files</a>
+	<a  class="btn btn-primary btn-block>" href="file_explorer">File explorer</a>
+	<a  class="btn btn-primary btn-block>" href="playlist_form">Playlists</a>
+	<a  class="btn btn-primary btn-block>" href="contact.php">Contacts</a>
 	<a  class="btn btn-primary btn-block <?php if(strpos($_SERVER['REQUEST_URI'], 'trash.php') !== false): ?>active<?php endif; ?>" href="trash.php">Trash</a>
     <a  class="btn btn-primary btn-block <?php if(preg_match('~\bshare.php\b~',$_SERVER['REQUEST_URI'])): ?>active<?php endif; ?>" href="share.php">Shares</a>
     <a  class="btn btn-primary btn-block <?php if(preg_match('~\bcreateshare.php\b~',$_SERVER['REQUEST_URI'])): ?>active<?php endif; ?>" href="createshare.php">Create Share</a>

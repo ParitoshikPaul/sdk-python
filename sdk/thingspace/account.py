@@ -1,5 +1,5 @@
-from api import cloud
-from RESTClient import RESTClient
+from .api import cloud
+from .RESTClient import RESTClient
 
 class account(cloud):
 

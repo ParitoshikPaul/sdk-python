@@ -1,5 +1,5 @@
-import requests
-import urllib
+import urllib ,sys
+from packages.requests import requests
 
 class RESTClient:
     """
@@ -47,7 +47,7 @@ class RESTClient:
             }
         return self.http_functions[request_type](call_url, params)
 
-    def get(self, call_url, params, headers=None):
+    def get(self, call_url, params, headers=None, process_json = True):
         """
         Make a GET request on the API.
 
@@ -65,8 +65,9 @@ class RESTClient:
                 'error_info'    : str(e),
             }
 
+        if not process_json:
+            return response
         content = response.json()
-
         return {
             'http_status'   : response.status_code,
             'error_string'  : '',

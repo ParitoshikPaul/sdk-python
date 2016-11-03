@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 side">
+      {% include "sidenav.html" %}
+    </div>
+    <div class="col-md-10 col-md-offset-2 main">
+      {% include "appnav.html" %}
+
+      <ul class="breadcrumb files-breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li>
+          <a class="text-info" href="/explorer/metadata{{breadcrumb.url}}">{{breadcrumb.name}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="content-main">
+        {% if not folders and not files %}
+        <div>
+          <h3 class="text-info">This folder is empty</h3>
+        </div>
+        {% endif %}
+        {% for folder in folders %}
+          <div class="file-row">
+            <a href="/explorer/metadata{% if folder.parentPath != '/' %}{{folder.parentPath}}{% endif %}/{{folder.name}}" class="text-info">
+              <i class="material-icons">folder_open</i>
+              {{folder.name}}
+            </a>
+          </div>
+        {% endfor %}
+        {% for file in files %}
+          <div class="file-row">
+            <a href="{{file.download_url}}" class="text-info">
+              <i class="material-icons">insert_drive_file</i>
+              {{file.name}}
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

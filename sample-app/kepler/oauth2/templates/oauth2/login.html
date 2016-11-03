@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container main-content-padding">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <div class="jumbotron mtop50 login-box">
+          <div class="header">
+            <h1>Kepler Cloud File Explorer</h1>
+          </div>
+          <div class="body">
+            <p class="mtop30">The Kepler Cloud File Explorer is a demo project that leverages the <a href="https://thingspace.verizon.com/developer/apis#/vzcloud/index.html" target="_blank"><b>Python Cloud SDK</b></a> to authenticate and display a user's Cloud contents.  The demo is built using <a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a>, <a href="https://www.djangoproject.com/" target="_blank">Django</a>, and styled with <a href="http://fezvrasta.github.io/bootstrap-material-design/" target="_blank">Bootstrap Material Design</a>.</p>
+
+            <p class="mtop30">
+              <a class="btn btn-primary btn-xlg btn-raised" href="{{ cloud.get_authorize_url }}">
+                <i class="material-icons">cloud_circle</i> Sign in with Verizon Cloud
+              </a>
+            </p>
+          </div>
+        </div>
+        {% if login_error %}
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          <strong>Could not authenticate</strong>
+        </div>
+        {% endif %}
+
+
+      </div>
+    </div>
+  </div><!-- /.container -->
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load percentage %}
+{% load bytes_human %}
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+      <div class="col-md-10 col-md-offset-2 main">
+        {% include "appnav.html" %}
+        <div class="files-header">
+          <h1 class="text-info">All Of My Files</h1>
+        </div>
+        <div class="content-main">
+          <h4>
+              <span class="label label-primary">Used {{account.usage.quotaUsed|bytes_human}} of {{account.usage.quota|bytes_human}}</span>
+          </h4>
+          <div class="progress progress-striped active mtop30 usage">
+              <div class="progress-bar" style="width: {% percentage account.usage.quotaUsed account.usage.quota %}%"></div>
+          </div>
+          {% for file in files %}
+          <div class="file-row">
+            <a href="{{file.download_url}}" class="text-info">
+              <i class="material-icons">insert_drive_file</i>
+              {{file.name}}
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

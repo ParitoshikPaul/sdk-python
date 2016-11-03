@@ -1,5 +1,4 @@
-import urllib ,sys
-from packages.requests import requests
+from thingspace.packages import requests
 
 class RESTClient:
     """

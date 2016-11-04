@@ -21,6 +21,9 @@ def search(request):
 
     query = request.GET.get('query', None)
 
+    if not query:
+        return render(request, 'explorer/search.html', {})
+
     try:
         files, folders = request.cloud.search(query=query)
         return render(request, 'explorer/search.html', {'files': files, 'folders': folders})

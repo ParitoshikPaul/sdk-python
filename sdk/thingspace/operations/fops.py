@@ -1,3 +1,5 @@
+from thingspace.packages.requests.requests.packages.urllib3.packages.six.moves import urllib
+
 from thingspace.env import Env
 from thingspace.exceptions import CloudError, NotFoundError
 from thingspace.exceptions import OutOfSyncError
@@ -74,7 +76,7 @@ class Fops():
 
         req = Request(
             'GET',
-            Env.api_cloud + '/files' + file_path,
+            Env.api_cloud + '/files' + urllib.parse.quote(file_path),
             params={
                 'access-token': self.access_token
             }

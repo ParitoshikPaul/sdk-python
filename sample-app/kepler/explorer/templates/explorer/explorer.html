@@ -23,7 +23,7 @@
         {% endif %}
         {% for folder in folders %}
           <div class="file-row">
-            <a href="/explorer/metadata{% if folder.parentPath != '/' %}{{folder.parentPath}}{% endif %}/{{folder.name}}" class="text-info">
+            <a href="/explorer/metadata{% if folder.parent_path != '/' %}{{folder.parent_path}}{% endif %}/{{folder.name}}" class="text-info">
               <i class="material-icons">folder_open</i>
               {{folder.name}}
             </a>

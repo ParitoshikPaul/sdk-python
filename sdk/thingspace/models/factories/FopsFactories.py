@@ -1,12 +1,12 @@
-from thingspace.models.CloudFile import CloudFile
-from thingspace.models.CloudFolder import CloudFolder
-
+from thingspace.models.cloud_file import CloudFile
+from thingspace.models.cloud_folder import CloudFolder
 
 class FopsFactories:
 
     @staticmethod
     def file_from_json(cloud, json):
-        return CloudFile(cloud, **json)
+
+        return CloudFile(cloud, json)
 
     @staticmethod
     def files_from_json(cloud, json):
@@ -17,7 +17,7 @@ class FopsFactories:
 
     @staticmethod
     def folder_from_json(json):
-        return CloudFolder(**json)
+        return CloudFolder(json)
 
     @staticmethod
     def folders_from_json(json):

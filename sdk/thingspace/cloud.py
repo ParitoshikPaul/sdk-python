@@ -1,14 +1,14 @@
-import os
-
 from thingspace.env import Env
-from thingspace.exceptions.CloudError import CloudError
-from thingspace.models.Account import Account
+from thingspace.exceptions import CloudError
+from thingspace.exceptions import UnauthorizedError
+from thingspace.models.account import Account
 from thingspace.models.factories.FopsFactories import FopsFactories
 from thingspace.operations.fops import Fops
 from thingspace.operations.oauth import Oauth
 from thingspace.operations.upload import Upload
 
 from thingspace.packages.requests.requests import Request, Session
+import time
 
 
 class Cloud(Oauth, Upload, Fops):
@@ -17,32 +17,34 @@ class Cloud(Oauth, Upload, Fops):
                  client_key,
                  client_secret,
                  callback_url,
-                 auth_token=None,
-                 refresh_token=None
+                 access_token=None,
+                 refresh_token=None,
+                 on_refreshed=None,
                  ):
 
         self.client_key = client_key
         self.client_secret = client_secret
         self.callback_url = callback_url
-        self.auth_token = auth_token
+        self.access_token = access_token
         self.refresh_token = refresh_token
+        self.on_refreshed = on_refreshed
 
         # authenticated if we have an auth token
-        self.authenticated = self.auth_token is not None
+        self.authenticated = self.access_token is not None
 
     def account(self):
         resp = self.networker(Request(
             'GET',
             str(Env.api_cloud + '/account'),
             headers={
-                "Authorization": "Bearer " + self.auth_token
+                "Authorization": "Bearer " + self.access_token
             }
         ))
 
         # handle other error codes here needed TODO
         json = resp.json()
 
-        return Account(**json)
+        return Account(json)
 
     def search(self, query=None, sort=None, virtualfolder="VZMOBILE", page=1, count=20):
         if not query:
@@ -70,40 +72,49 @@ class Cloud(Oauth, Upload, Fops):
             str(Env.api_cloud + '/search'),
             params=queryparams,
             headers={
-                "Authorization": "Bearer " + self.auth_token
+                "Authorization": "Bearer " + self.access_token
             }
         ))
 
         # handle other error codes here needed TODO
+        if resp.status_code != 200:
+            print(resp.status_code)
+            print(resp.text)
+            raise CloudError('Could not get search results', response=resp)
 
         json = resp.json()
+
+
+
         files = FopsFactories.files_from_json(self, json['searchResults'].get('file', []))
         folders = FopsFactories.folders_from_json(json['searchResults'].get('folder', []))
 
         return files, folders
 
-    def networker(self, request, bubble=True, retry=False):
+    def networker(self, request, auto_refresh=True, retry=False):
         s = Session()
         prepped = request.prepare()
         resp = s.send(prepped)
 
         if resp.status_code == 503:
-            raise CloudError('Service is unavailable', None, resp.status_code)
-        elif resp.status_code >= 504:
-            raise CloudError('Gateway timeout', None, resp.status_code)
+            raise CloudError('Service is unavailable',  response=resp)
+        elif resp.status_code == 504:
+            raise CloudError('Gateway timeout', response=resp)
         elif resp.status_code >= 500:
+            raise CloudError('Server error', response=resp)
+
+        #automatic refresh logic
+        if resp.status_code == 401 and self.authenticated and auto_refresh and self.refresh_token:
             try:
-                raise CloudError('Server error', resp.json(), resp.status_code)
-            except ValueError:
-                raise CloudError('Server error', None, resp.status_code)
-
-
-
-        #automatic refresh
-        if resp.status_code == 401 and self.authenticated and bubble and self.refresh_token:
-            raise CloudError('Unauthorized request', resp.json(), resp.status_code)
+                refresh_tokens = self.refresh()
+                print('refresh worked:' + str(refresh_tokens))
+                #update access token of course
+                request.headers['Authorization'] = "Bearer " + self.access_token
+                return self.networker(request, auto_refresh=False)
+            except CloudError as error:
+                print('refresh failed:' + str(error.response.text))
+                raise UnauthorizedError('Unauthorized request', response=error.response)
         elif resp.status_code == 401:
-            raise CloudError('Unauthorized request', resp.json(), resp.status_code)
-
+            raise UnauthorizedError('Unauthorized request', response=resp)
 
         return resp

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from thingspace.exceptions.CloudError import CloudError
+from thingspace.exceptions import UnauthorizedError
+from thingspace.exceptions import CloudError
 
 
 def files(request):
@@ -9,8 +10,9 @@ def files(request):
     try:
         account = request.cloud.account()
         files, empty_folders, etag = request.cloud.fullview()
-
         return render(request, 'explorer/files.html', {'files': files, 'account': account})
+    except UnauthorizedError:
+        return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/files.html', {error: error})
 
@@ -25,8 +27,10 @@ def search(request):
         return render(request, 'explorer/search.html', {})
 
     try:
-        files, folders = request.cloud.search(query=query)
+        files, folders = request.cloud.search(query='name:' + query)
         return render(request, 'explorer/search.html', {'files': files, 'folders': folders})
+    except UnauthorizedError:
+        return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/search.html', {error: error})
 
@@ -51,6 +55,8 @@ def metadata(request, path='/'):
     try:
         files, folders = request.cloud.metadata(path=path)
         return render(request, 'explorer/explorer.html', {'files': files, 'folders': folders, 'breadcrumbs': breadcrumbs})
+    except UnauthorizedError:
+        return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/explorer.html', {error: error})
 

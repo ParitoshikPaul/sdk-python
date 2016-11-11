@@ -11,3 +11,5 @@ class Hasher:
             hasher.update(buf)
             buf = afile.read(blocksize)
         return hasher.hexdigest()
+
+

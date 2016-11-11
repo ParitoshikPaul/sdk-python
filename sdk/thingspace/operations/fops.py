@@ -1,6 +1,6 @@
 from thingspace.env import Env
-from thingspace.exceptions.CloudError import CloudError
-from thingspace.exceptions.OutOfSyncError import OutOfSyncError
+from thingspace.exceptions import CloudError, NotFoundError
+from thingspace.exceptions import OutOfSyncError
 from thingspace.models.factories.FopsFactories import FopsFactories
 from thingspace.packages.requests.requests import Request
 
@@ -11,14 +11,14 @@ class Fops():
             'GET',
             str(Env.api_cloud + '/metadata' + path),
             headers={
-                "Authorization": "Bearer " + self.auth_token
+                "Authorization": "Bearer " + self.access_token
             }
         ))
 
         json = resp.json()
 
         if resp.status_code == 404:
-            raise CloudError("path not found", json, resp.status_code)
+            raise NotFoundError("path not found", response=resp)
 
         # handle other error codes here needed TODO
 
@@ -33,7 +33,7 @@ class Fops():
             return None
 
         headers = {
-            "Authorization": "Bearer " + self.auth_token
+            "Authorization": "Bearer " + self.access_token
         }
 
         if etag is not None:
@@ -51,7 +51,7 @@ class Fops():
 
         # fullview is too far out of sync
         if resp.status_code == 205:
-            raise OutOfSyncError("You are too far out of sync, please call fullview again with no etag")
+            raise OutOfSyncError("You are too far out of sync, please call fullview again with no etag", response=resp)
 
         # handle other error codes here needed TODO
 
@@ -66,7 +66,7 @@ class Fops():
 
     def download_url(self, file=None, path=None):
         if file is not None:
-            file_path = file.parentPath + '/' + file.name
+            file_path = file.parent_path + '/' + file.name
         elif path is not None:
             file_path = path
         else:
@@ -76,7 +76,7 @@ class Fops():
             'GET',
             Env.api_cloud + '/files' + file_path,
             params={
-                'access-token': self.auth_token
+                'access-token': self.access_token
             }
         )
         prepped = req.prepare()

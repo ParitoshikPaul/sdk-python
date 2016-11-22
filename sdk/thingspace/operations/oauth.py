@@ -5,7 +5,7 @@ from thingspace.packages.requests.requests import Request
 
 
 class Oauth():
-    def get_authorize_url(self):
+    def authorize_url(self):
         req = Request(
             'GET',
             str(Env.api_cloud + '/oauth2/authorize'),
@@ -31,7 +31,6 @@ class Oauth():
             }
         ), auto_refresh=False)
 
-        # need to handle error cases
         if resp.status_code != 200:
             raise UnauthorizedError('Could not get access tokens please reauthenticate', response=resp)
 
@@ -58,7 +57,6 @@ class Oauth():
             }
         ), auto_refresh=False)
 
-        # need to handle error cases
         if resp.status_code != 200:
             raise UnauthorizedError('Could not refresh tokens please reauthenticate', response=resp)
 

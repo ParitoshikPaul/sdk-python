@@ -13,7 +13,6 @@ def index(request):
 def token(request):
     try:
         token_response = request.cloud.token(request.GET.get('code'))
-        print('token response oauth view' + str(token_response))
 
     except CloudError:
         return render(request, 'oauth2/login.html', {'login_error': True, 'cloud': request.cloud})

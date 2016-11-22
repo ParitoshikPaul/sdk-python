@@ -11,13 +11,13 @@ from thingspace.utils.hasher import Hasher
 
 class Upload:
 
-    def upload(self, file, upload_path, name=None, chunked=False, chunk_size=Env.chunked_upload_size):
+    def upload(self, file_or_path, upload_path, name=None, chunked=False, chunk_size=Env.chunked_upload_size):
 
-        if isinstance(file, six.string_types):
-            with open(file, 'rb') as file:
+        if isinstance(file_or_path, six.string_types):
+            with open(file_or_path, 'rb') as file:
                 return self.__upload_handler(file, upload_path, name, chunked, chunk_size)
         else:
-            return self.__upload_handler(file, upload_path, name, chunked, chunk_size)
+            return self.__upload_handler(file_or_path, upload_path, name, chunked, chunk_size)
 
 
     def __upload_handler(self, file, upload_path, name, chunked, chunk_size):
@@ -88,7 +88,6 @@ class Upload:
             }
         ))
 
-        # handle other error codes here needed TODO
         if resp.status_code != 200:
             raise CloudError('Could not start upload intent', response=resp)
 

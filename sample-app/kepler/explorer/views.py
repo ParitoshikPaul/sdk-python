@@ -9,7 +9,7 @@ def files(request):
 
     try:
         account = request.cloud.account()
-        files, empty_folders, etag = request.cloud.fullview()
+        files, empty_folders, etag, deleted = request.cloud.fullview()
         return render(request, 'explorer/files.html', {'files': files, 'account': account})
     except UnauthorizedError:
         return redirect('logout')

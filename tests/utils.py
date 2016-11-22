@@ -32,3 +32,35 @@ class Utils:
     def cloud():
         args = Utils.cloud_from_args();
         return Utils.create_cloud(args.access_token, args.refresh_token)
+
+
+    @staticmethod
+    def assert_is_file(unit_tester, file):
+        unit_tester.assertTrue(file.name)
+        unit_tester.assertTrue(file['name'])
+
+        unit_tester.assertTrue(file.parent_path)
+        unit_tester.assertTrue(file['parent_path'])
+
+    @staticmethod
+    def assert_is_files(unit_tester, files):
+
+        for file in files:
+            Utils.assert_is_file(unit_tester, file)
+
+
+    @staticmethod
+    def assert_is_folder(unit_tester, folder):
+        unit_tester.assertTrue(folder.name)
+        unit_tester.assertTrue(folder['name'])
+        unit_tester.assertTrue(folder.parent_path)
+        unit_tester.assertTrue(folder['parent_path'])
+
+    @staticmethod
+    def assert_is_folders(unit_tester, folders):
+        for folder in folders:
+            Utils.assert_is_folder(unit_tester, folder)
+
+
+
+

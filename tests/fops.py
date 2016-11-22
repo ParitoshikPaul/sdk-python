@@ -10,7 +10,7 @@ class TestFops(unittest.TestCase):
 
     def test_fullview(self):
         #regular fullview
-        files, empty_folders, etag1 = cloud.fullview()
+        files, empty_folders, etag1, deleted = cloud.fullview()
         self.assertTrue(files);
         self.assertTrue(etag1);
 
@@ -24,12 +24,15 @@ class TestFops(unittest.TestCase):
 
         #get download urls via both interfaces
         self.assertTrue(file.download_url())
-        self.assertTrue(cloud.download_url(file=file))
+        self.assertTrue(cloud.download_url(file))
+
+        with self.assertRaises(ValueError):
+            cloud.download_url(None)
 
         #delta
-        files, empty_folders, etag2 = cloud.fullview(etag=etag1)
-        self.assertFalse(files)
-        self.assertEqual(etag1,etag2)
+        response = cloud.fullview(etag=etag1)
+        self.assertFalse(response.files)
+        self.assertEqual(response.etag,etag1)
 
         #bad delta not working currently
         #with self.assertRaises(CloudError):
@@ -52,6 +55,13 @@ class TestFops(unittest.TestCase):
     def test_search(self):
         files, folders = cloud.search(query='extension:jpg')
         self.assertTrue(files[0])
+
+    def test_folder_create_delete(self):
+        cloud.create_folder('/VZMOBILE/auto_test_folder')
+        folder = cloud.create_folder('/VZMOBILE/auto_test_folder', override='overwrite')
+        print(folder)
+        self.assertTrue(folder)
+        cloud.delete(folder, purge=True)
 
 if __name__ == '__main__':
     del sys.argv[1:]

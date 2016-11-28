@@ -3,6 +3,7 @@ import collections
 from thingspace.env import Env
 from thingspace.exceptions import CloudError, NotFoundError
 from thingspace.models.factories.FopsFactories import FopsFactories
+from thingspace.operations.fops import Fops
 from thingspace.packages.requests.requests import Request
 
 
@@ -26,6 +27,28 @@ class Trash():
 
         if resp.status_code != 200:
             raise CloudError('Could not empty the trash', response=resp)
+
+        return
+
+    def restore(self, file_or_path):
+        file_path = Fops.file_or_path_to_path(file_or_path)
+
+        resp = self.networker(Request(
+            'POST',
+            Env.api_cloud + '/fops/restore',
+            json={
+                "path": [file_path]
+            },
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        if resp.status_code == 404:
+            raise NotFoundError("file not found, could not restore", response=resp)
+
+        if resp.status_code != 204:
+            raise CloudError("Could not restore file", response=resp)
 
         return
 

@@ -60,3 +60,21 @@ def metadata(request, path='/'):
     except CloudError as error:
         return render(request, 'explorer/explorer.html', {error: error})
 
+
+def trash(request, operation=None):
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    try:
+        if operation == 'empty':
+            request.cloud.empty_trash()
+        elif operation == 'restore':
+            request.cloud.restore(request.POST['path'])
+
+
+        files, folders = request.cloud.trash()
+        return render(request, 'explorer/trash.html', {'files': files, 'folders': folders})
+    except UnauthorizedError:
+        return redirect('logout')
+    except CloudError as error:
+        return render(request, 'explorer/trash.html', {error: error})

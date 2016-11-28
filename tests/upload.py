@@ -9,15 +9,26 @@ cloud = Utils.cloud()
 
 class TestUpload(unittest.TestCase):
 
-    def test_upload_and_delete(self):
+    def test_upload_copy_delete(self):
         small_file = open('sample-files/ScreenShare.dmg', 'rb')
         file_uploaded = cloud.upload(small_file, '/VZMOBILE')
-        self.assertTrue(file_uploaded)
+        Utils.assert_is_file(self, file_uploaded)
 
 
-        #delete file by file reference now
-        cloud.delete(file_uploaded)
+        #copy file
+        copied = cloud.copy(file_uploaded, '/VZMOBILE/ScreenShare_copy_test.dmg')
+        Utils.assert_is_file(self, copied)
 
+        #move one of the files
+        copied = cloud.move(copied, '/VZMOBILE/ScreenShare_copy_moved.dmg')
+        print(copied)
+        Utils.assert_is_file(self, copied)
+
+        #cleanup both files by reference and path
+        cloud.delete('/VZMOBILE/ScreenShare.dmg')
+        cloud.delete(copied)
+
+        #make sure it was deleted
         with self.assertRaises(NotFoundError):
             cloud.delete(file_uploaded)
 

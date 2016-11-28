@@ -10,3 +10,5 @@ class CloudFile(Struct):
     def download_url(self):
         return self.cloud.download_url(self)
 
+    def fullpath(self):
+        return self.parent_path + '/' + self.name

@@ -1,10 +1,12 @@
 import collections
 from thingspace.models.cloud_file import CloudFile
 from thingspace.models.cloud_folder import CloudFolder
+from thingspace.models.conflict_solve import ConflictSolve
+from thingspace.models.override import Override
 from thingspace.packages.requests.requests.packages.urllib3.packages.six.moves import urllib
 
 from thingspace.env import Env
-from thingspace.exceptions import CloudError, NotFoundError
+from thingspace.exceptions import CloudError, NotFoundError, ConflictError
 from thingspace.exceptions import OutOfSyncError
 from thingspace.models.factories.FopsFactories import FopsFactories
 from thingspace.packages.requests.requests import Request
@@ -13,9 +15,6 @@ from thingspace.utils.path import Path
 
 
 class Fops():
-
-    OVERWRITE = 'overwrite'
-    MODIFY = 'modify'
 
     def metadata(self, path='/'):
         resp = self.networker(Request(
@@ -137,8 +136,8 @@ class Fops():
     def create_folder(self, path, override=None):
         if path is None:
             raise ValueError('Path must not be None')
-        if override is not None and override is not Fops.OVERWRITE and override is not Fops.MODIFY:
-            raise ValueError('override may only be None, ' + Fops.OVERWRITE + ', or ' + Fops.MODIFY)
+        if override is not None and override != Override.OVERWRITE and override != Override.MODIFY:
+            raise ValueError('override may only be None, ' + Override.OVERWRITE + ', or ' + Override.MODIFY)
 
         parent_path, name = Path.fullpathToNameAndPath(path)
 
@@ -168,6 +167,146 @@ class Fops():
             raise CloudError("Could not create the folder", response=resp)
 
         return FopsFactories.folder_from_json(resp.json()['folder'])
+
+    def copy(self, file_or_path, target_path, safe=False, override=None, conflictsolve=None):
+        file_path = Fops.file_or_path_to_path(file_or_path)
+        if override is not None and override != Override.OVERWRITE and override != Override.MODIFY:
+            raise ValueError('override may only be None, ' + Override.OVERWRITE + ', or ' + Override.MODIFY)
+        if conflictsolve is not None and conflictsolve != ConflictSolve.COPY:
+            raise ValueError('conflictsolve may only be None or ' + ConflictSolve.COPY)
+
+        # add mandatory
+        body = {
+            'src': file_path,
+            'target': target_path,
+            'safe': safe,
+        }
+
+        # add optional
+        if override:
+            body['override'] = override
+        if conflictsolve:
+            body['conflictsolve'] = conflictsolve
+
+        resp = self.networker(Request(
+            'POST',
+            Env.api_cloud + '/fops/copy',
+            json=body,
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        if resp.status_code == 404:
+            raise NotFoundError("path not found", response=resp)
+
+        if resp.status_code == 409:
+            raise ConflictError("target already exists, provide a new target or set conflictsolve='copy'", response=resp)
+
+        if resp.status_code != 200:
+            raise CloudError("Could not create the folder", response=resp)
+
+        json = resp.json()
+
+        file = json.get('file', None)
+
+        if file:
+            file_or_folder = FopsFactories.file_from_json(self, file)
+        else:
+            file_or_folder = FopsFactories.folder_from_json(json['folder'])
+
+        return file_or_folder
+
+    def move(self, file_or_path, target_path, safe=False, conflictsolve=None):
+        file_path = Fops.file_or_path_to_path(file_or_path)
+        if conflictsolve is not None and conflictsolve != ConflictSolve.COPY:
+            raise ValueError('conflictsolve may only be None or ' + ConflictSolve.COPY)
+
+        # add mandatory
+        body = {
+            'src': file_path,
+            'target': target_path,
+            'safe': safe,
+        }
+
+        # add optional
+        if conflictsolve:
+            body['conflictsolve'] = conflictsolve
+
+        resp = self.networker(Request(
+            'POST',
+            Env.api_cloud + '/fops/move',
+            json=body,
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        if resp.status_code == 404:
+            raise NotFoundError("path not found", response=resp)
+
+        if resp.status_code == 409:
+            raise ConflictError("target already exists, provide a new target or set conflictsolve='copy'", response=resp)
+
+        if resp.status_code != 200:
+            raise CloudError("Could not create the folder", response=resp)
+
+        json = resp.json()
+
+        file = json.get('file', None)
+
+        if file:
+            file_or_folder = FopsFactories.file_from_json(self, file)
+        else:
+            file_or_folder = FopsFactories.folder_from_json(json['folder'])
+
+        return file_or_folder
+
+    def rename(self, file_or_path, target_path, safe=False, conflictsolve=None):
+        file_path = Fops.file_or_path_to_path(file_or_path)
+        if conflictsolve is not None and conflictsolve != ConflictSolve.COPY:
+            raise ValueError('conflictsolve may only be None or ' + ConflictSolve.COPY)
+
+        # add mandatory
+        body = {
+            'src': file_path,
+            'target': target_path,
+            'safe': safe,
+        }
+
+        # add optional
+        if conflictsolve:
+            body['conflictsolve'] = conflictsolve
+
+        resp = self.networker(Request(
+            'POST',
+            Env.api_cloud + '/fops/rename',
+            json=body,
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        if resp.status_code == 404:
+            raise NotFoundError("path not found", response=resp)
+
+        if resp.status_code == 409:
+            raise ConflictError("target already exists, provide a new target or set conflictsolve='copy'", response=resp)
+
+        if resp.status_code != 200:
+            raise CloudError("Could not create the folder", response=resp)
+
+        json = resp.json()
+
+        file = json.get('file', None)
+
+        if file:
+            file_or_folder = FopsFactories.file_from_json(self, file)
+        else:
+            file_or_folder = FopsFactories.folder_from_json(json['folder'])
+
+        return file_or_folder
+
 
     @staticmethod
     def file_or_path_to_path(file_or_path):

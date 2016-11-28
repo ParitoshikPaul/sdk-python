@@ -11,7 +11,7 @@ class TestFops(unittest.TestCase):
     def test_fullview(self):
         #regular fullview
         files, empty_folders, etag1, deleted = cloud.fullview()
-        self.assertTrue(files);
+        Utils.assert_is_files(self, files);
         self.assertTrue(etag1);
 
         file = files[0]
@@ -56,11 +56,19 @@ class TestFops(unittest.TestCase):
         files, folders = cloud.search(query='extension:jpg')
         self.assertTrue(files[0])
 
-    def test_folder_create_delete(self):
+    def test_folder_create_move_delete(self):
         cloud.create_folder('/VZMOBILE/auto_test_folder')
         folder = cloud.create_folder('/VZMOBILE/auto_test_folder', override='overwrite')
         print(folder)
-        self.assertTrue(folder)
+        Utils.assert_is_folder(self, folder)
+
+        folder = cloud.rename(folder, '/VZMOBILE/auto_test_folder_moved')
+        print(folder)
+        Utils.assert_is_folder(self, folder)
+
+        copied = cloud.copy(folder, '/VZMOBILE/auto_test_folder_copy')
+        Utils.assert_is_folder(self, copied)
+        cloud.delete(copied, purge=True)
         cloud.delete(folder, purge=True)
 
 if __name__ == '__main__':

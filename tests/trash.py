@@ -16,11 +16,23 @@ class TestTrash(unittest.TestCase):
         Utils.assert_is_folders(self, folders)
 
     def test_empty_trash(self):
+        file_uploaded = cloud.upload('sample-files/ScreenShare.dmg', '/VZMOBILE', name="test_restore.dmg")
         cloud.empty_trash()
 
         files, folders = cloud.trash()
         self.assertFalse(files)
         self.assertFalse(folders)
+
+    def test_restore_trash(self):
+        file_uploaded = cloud.upload('sample-files/ScreenShare.dmg', '/VZMOBILE', name="test_restore.dmg")
+        Utils.assert_is_file(self, file_uploaded)
+        cloud.delete(file_uploaded)
+        cloud.restore(file_uploaded)
+
+        file = cloud.file_metadata('/VZMOBILE/test_restore.dmg')
+        print('file metadata' + str(file))
+
+
 
 
 if __name__ == '__main__':

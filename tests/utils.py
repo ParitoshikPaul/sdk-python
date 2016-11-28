@@ -42,6 +42,8 @@ class Utils:
         unit_tester.assertTrue(file.parent_path)
         unit_tester.assertTrue(file['parent_path'])
 
+        unit_tester.assertTrue(file.fullpath())
+
     @staticmethod
     def assert_is_files(unit_tester, files):
 
@@ -55,6 +57,8 @@ class Utils:
         unit_tester.assertTrue(folder['name'])
         unit_tester.assertTrue(folder.parent_path)
         unit_tester.assertTrue(folder['parent_path'])
+
+        unit_tester.assertTrue(folder.fullpath())
 
     @staticmethod
     def assert_is_folders(unit_tester, folders):

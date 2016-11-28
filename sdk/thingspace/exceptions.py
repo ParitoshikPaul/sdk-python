@@ -12,5 +12,9 @@ class UnauthorizedError(CloudError):
     pass
 
 
+class ConflictError(CloudError):
+    pass
+
+
 class NotFoundError(CloudError):
     pass

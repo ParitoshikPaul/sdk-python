@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+      <div class="col-md-10 col-md-offset-2 main">
+        {% include "appnav.html" with actions='trash' %}
+        <div class="files-header">
+          <h1 class="text-info">Trash</h1>
+        </div>
+        <div class="content-main">
+          {% for folder in folders %}
+            <div class="file-row">
+                <a href="#" class="text-info" data-target="#restoreModal" data-toggle="modal" data-path="{{file.fullpath}}">
+                  <i class="material-icons">folder_open</i>
+                  {{folder.name}}
+                </a>
+            </div>
+          {% endfor %}
+          {% for file in files %}
+          <div class="file-row">
+            <a href="#" class="text-info" data-target="#restoreModal" data-toggle="modal" data-path="{{file.fullpath}}">
+              <i class="material-icons">insert_drive_file</i>
+              {{file.name}}
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<!-- delete trash modal -->
+<div class="modal fade" id="restoreModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Restore File</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                Do you want to restore this file to it's original location?
+            </ul>
+        </div>
+      <div class="modal-footer">
+        <form class="inline-block" action="/explorer/trash/restore" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="path"/>
+            <button type="submit" class="btn btn-primary">ok</button>
+        </form>
+        <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#restoreModal').on('show.bs.modal', function(e) {
+    var path = $(e.relatedTarget).data('path');
+
+    //populate the textbox
+    $(e.currentTarget).find('input[name="path"]').val(path);
+});
+</script>
+
+
+{% endblock %}

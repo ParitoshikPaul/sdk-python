@@ -1,0 +1,2 @@
+class ConflictSolve:
+    COPY = 'copy'

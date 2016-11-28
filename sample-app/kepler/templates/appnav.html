@@ -4,8 +4,41 @@
 
     </div>
 	<div class="navbar-collapse collapse navbar-material-light-blue-collapse">
-		<ul class="nav navbar-nav navbar-right">
-		</ul>
+        <form method="get" action="/explorer/search" class="navbar-form navbar-right">
+            <div class="form-group is-empty">
+                <input type="text" class="form-control col-sm-8" name="query" placeholder="Search">
+            </div>
+        </form>
+
+        {% if actions == 'trash' %}
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#emptyTrash"><i class="material-icons">delete_forever</i></a>
+        </ul>
+        {% endif %}
 	</div>
+  </div>
+</div>
+
+
+<!-- delete trash modal -->
+<div class="modal fade" id="emptyTrash" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Delete all items in the trash?</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                Are you sure you want to permanently remove all items from the trash?
+            </ul>
+        </div>
+      <div class="modal-footer">
+        <form class="inline-block" action="/explorer/trash/empty" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">ok</button>
+        </form>
+        <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+      </div>
+    </div>
   </div>
 </div>

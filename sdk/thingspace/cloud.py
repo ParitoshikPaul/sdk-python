@@ -1,78 +1,129 @@
-from ..packages.requests.requests import Request, Session
+import collections
+from thingspace.env import Env
+from thingspace.exceptions import CloudError
+from thingspace.exceptions import UnauthorizedError
+from thingspace.models.account import Account
+from thingspace.models.factories.FopsFactories import FopsFactories
+from thingspace.operations.fops import Fops
+from thingspace.operations.oauth import Oauth
+from thingspace.operations.trash import Trash
+from thingspace.operations.upload import Upload
+
+from thingspace.packages.requests.requests import Request, Session, RequestException
 
 
-class Cloud:
-    api_url = 'https://api.cloudapi.verizon.com'
+class Cloud(Oauth, Upload, Fops, Trash):
 
     def __init__(self,
                  client_key,
                  client_secret,
                  callback_url,
-                 auth_token=None,
+                 access_token=None,
                  refresh_token=None,
-                 expires_in=None,
+                 on_refreshed=None,
                  ):
+
         self.client_key = client_key
         self.client_secret = client_secret
         self.callback_url = callback_url
-        self.auth_token = auth_token
+        self.access_token = access_token
         self.refresh_token = refresh_token
-        self.expires_in = expires_in
+        self.on_refreshed = on_refreshed
 
         # authenticated if we have an auth token
-        self.authenticated = self.auth_token is not None
+        self.authenticated = self.access_token is not None
 
-    def get_authorize_url(self):
-        req = Request(
+    def account(self):
+        resp = self.networker(Request(
             'GET',
-            str(Cloud.api_url + '/cloud/1/oauth2/authorize'),
-            params={
-                'client_id': self.client_key,
-                'redirect_uri': self.callback_url,
-                'response_type': 'code',
+            str(Env.api_cloud + '/account'),
+            headers={
+                "Authorization": "Bearer " + self.access_token
             }
-        )
-        prepped = req.prepare()
-        return prepped.url
+        ))
 
-    def token(self, auth_code):
-        s = Session()
-        req = Request(
-            'POST',
-            str(Cloud.api_url + '/cloud/1/oauth2/token'),
-            data={
-                'client_id': self.client_key,
-                'client_secret': self.client_secret,
-                'redirect_uri': self.callback_url,
-                'code': auth_code,
-                'grant_type': 'authorization_code',
-            }
-        )
-        prepped = req.prepare()
+        if resp.status_code != 200:
+            raise CloudError('Could not get Account data', response=resp)
 
-        resp = s.send(prepped);
         json = resp.json()
 
-        # set the oauth tokens in the sdk
-        self.auth_token = json.get('auth_token', None)
-        self.refresh_token = json.get('refresh_token', None)
-        self.expires_in = json.get('expires_in', None)
+        return Account(json)
 
-        return json
+    def search(self, query, sort=None, virtualfolder="VZMOBILE", page=1, count=20):
+        if not query:
+            raise ValueError("a query must be provided")
+        if not virtualfolder:
+            raise ValueError("virtualfolder must be provided")
+        if not page or page < 1:
+            raise ValueError("page must be provided and greater than 1")
+        if not count or count < 1 or count > 100:
+            raise ValueError("count must be provided and greater than 0 and less than 100")
 
-    def fullview(self):
-        if not self.authenticated:
-            return None
+        #add mandatory params
+        queryparams = {
+            'query' : query,
+            'virtualfolder': virtualfolder,
+            'count': count,
+            'page': page,
+        }
 
-        s = Session()
-        req = Request(
+        if sort:
+            queryparams['sort'] = sort
+
+        resp = self.networker(Request(
             'GET',
-            str(Cloud.api_url + '/cloud/1/fullview'),
+            str(Env.api_cloud + '/search'),
+            params=queryparams,
             headers={
-                "Authorization" : "Bearer " + self.auth_token
+                "Authorization": "Bearer " + self.access_token
             }
-        )
+        ))
 
-        prepped = req.prepare()
-        resp = s.send(prepped)
-        return resp.json()
+        if resp.status_code != 200:
+            raise CloudError('Could not get search results', response=resp)
+
+        json = resp.json()
+
+        SearchResponse = collections.namedtuple('SearchResponse', 'files folders')
+
+
+        files = FopsFactories.files_from_json(self, json['searchResults'].get('file', []))
+        folders = FopsFactories.folders_from_json(json['searchResults'].get('folder', []))
+
+        return SearchResponse(files, folders)
+
+    def networker(self, request, auto_refresh=True, retry=False):
+
+        try:
+            s = Session()
+            prepped = request.prepare()
+            resp = s.send(prepped)
+
+            if resp.status_code == 503:
+                raise CloudError('Service is unavailable',  response=resp)
+            elif resp.status_code == 504:
+                raise CloudError('Gateway timeout', response=resp)
+            elif resp.status_code >= 500:
+                raise CloudError('Server error', response=resp)
+
+            #automatic refresh logic
+            if resp.status_code == 401 and self.authenticated and auto_refresh and self.refresh_token:
+                try:
+                    refresh_tokens = self.refresh()
+                    #update access token of the current request
+                    request.headers['Authorization'] = "Bearer " + self.access_token
+                    return self.networker(request, auto_refresh=False)
+
+                except RequestException:
+                    raise CloudError('Network error')
+
+                except CloudError as error:
+                    raise UnauthorizedError('Unauthorized request', response=error.response)
+
+            elif resp.status_code == 401:
+                raise UnauthorizedError('Unauthorized request', response=resp)
+
+        except RequestException:
+            raise CloudError('Network error')
+
+        return resp

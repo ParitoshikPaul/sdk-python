@@ -53,7 +53,7 @@ class Trash():
         return
 
 
-    def trash(self, sort=None, virtualfolder="VZMOBILE", page=1, count=20, deep=False, filter=None):
+    def trash(self, virtualfolder="VZMOBILE", sort=None, page=1, count=20, deep=False, filter=None):
         if not virtualfolder:
             raise ValueError("virtualfolder must be provided")
         if not page or page < 1:
@@ -83,6 +83,8 @@ class Trash():
                 "Authorization": "Bearer " + self.access_token
             }
         ))
+        if resp.status_code == 404:
+            raise CloudError('virtualfolder not found, could not get trash can items', response=resp)
 
         if resp.status_code != 200:
             raise CloudError('Could not get trash can items', response=resp)

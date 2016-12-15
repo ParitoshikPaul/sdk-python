@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load percentage %}
+{% load bytes_human %}
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+      <div class="col-md-10 col-md-offset-2 main">
+        {% include "appnav.html" %}
+        <div class="files-header">
+          <h1 class="text-info">All Of My Files</h1>
+        </div>
+        <div class="content-main">
+          <h4>
+              <span class="label label-primary">Used {{account.usage.quota_used|bytes_human}} of {{account.usage.quota|bytes_human}}</span>
+          </h4>
+          <div class="progress progress-striped active mtop30 usage">
+              <div class="progress-bar" style="width: {% percentage account.usage.quota_used account.usage.quota %}%"></div>
+          </div>
+
+         <!-- file loop start here -->
+	{% for playlist in playlists.playlistDefinitions.playlistDefinition %}
+	<div class="file-row">
+		<a href="#" class="text-info">
+		<i class="material-icons">insert_drive_file</i>
+		{{playlist.name}}
+		</a>
+			<div style="float:right;width: 60%;">
+			<a href="#" data-toggle="modal" data-target="#create-playlist-dialog" title="Rename Playlist">Update Playlist Definition</a>
+			<a href="#" data-toggle="modal" data-target="#rename-playlist-dialog" title="Rename Playlist">Rename</a>
+			<a href="#">Playlist Definition</a>
+			<a href="#">Delete</a>
+			</div>
+	</div>
+	{% endfor %}
+	<!-- end of the file loop start here -->
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

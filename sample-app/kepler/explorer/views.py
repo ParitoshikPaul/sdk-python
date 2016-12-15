@@ -78,3 +78,16 @@ def trash(request, operation=None):
         return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/trash.html', {error: error})
+
+def playlist(request):
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    try:
+        account = request.cloud.account()
+        playlists = request.cloud.playlists()
+        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
+    except UnauthorizedError:
+        return redirect('logout')
+    except CloudError as error:
+        return render(request, 'explorer/playlists.html', {error: error})

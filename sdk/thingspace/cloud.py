@@ -8,11 +8,12 @@ from thingspace.operations.fops import Fops
 from thingspace.operations.oauth import Oauth
 from thingspace.operations.trash import Trash
 from thingspace.operations.upload import Upload
+from thingspace.operations.playlist import Playlists
 
 from thingspace.packages.requests.requests import Request, Session, RequestException
 
 
-class Cloud(Oauth, Upload, Fops, Trash):
+class Cloud(Oauth, Upload, Fops, Trash, Playlists):
 
     def __init__(self,
                  client_key,

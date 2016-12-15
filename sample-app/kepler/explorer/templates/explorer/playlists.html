@@ -19,11 +19,10 @@
           <div class="progress progress-striped active mtop30 usage">
               <div class="progress-bar" style="width: {% percentage account.usage.quota_used account.usage.quota %}%"></div>
           </div>
-
          <!-- file loop start here -->
 	{% for playlist in playlists.playlistDefinitions.playlistDefinition %}
 	<div class="file-row">
-		<a href="#" class="text-info">
+		<a href="/explorer/playlists/" class="text-info">
 		<i class="material-icons">insert_drive_file</i>
 		{{playlist.name}}
 		</a>

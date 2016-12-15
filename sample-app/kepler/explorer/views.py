@@ -85,9 +85,11 @@ def playlist(request):
 
     try:
         account = request.cloud.account()
-        playlists = request.cloud.playlists()
-        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
+        playlists = request.cloud.playlists('music', '', '10','')
+        get_playlist = request.cloud.get_playlist('757a028c8e2244029c9615d3a45d1822')
+        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account, 'playlist_item': get_playlist})
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/playlists.html', {error: error})
+

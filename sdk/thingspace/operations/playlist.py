@@ -28,4 +28,25 @@ class Playlists():
         playlist = resp.json()
         return playlist
 
+    def get_playlist(self, playlistUid=''):
+        if not self.authenticated:
+            return None
+
+        headers = {
+            "Authorization": "Bearer " + self.access_token
+        }
+        params = {
+            "playlistUid": playlistUid,
+        }
+        resp = self.networker(Request(
+            'GET',
+            Env.api_url + '/cloud/' + Env.api_version + '/playlists/' + playlistUid,
+            headers=headers
+        ))
+
+        playlist_uid = resp.json()
+        return playlist_uid
+
+
+
 

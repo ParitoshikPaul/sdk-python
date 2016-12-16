@@ -89,8 +89,12 @@ def playlist(request):
         count = request.POST.get('count')
         sort = request.POST.get('sort')
         account = request.cloud.account()
+        uid = request.GET.get('playlist_uid', '')
+        playlist_items = request.cloud.get_playlist_items(uid)
+        if uid:
+            return render(request, 'explorer/playlists.html', {"uid": uid, "playlist_items": playlist_items})
         playlists = request.cloud.playlists(type, page, count, sort)
-        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
+        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account, "uid": uid, "playlist_items": playlist_items})
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:

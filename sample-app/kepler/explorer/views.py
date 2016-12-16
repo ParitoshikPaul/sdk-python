@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from thingspace.exceptions import UnauthorizedError
 from thingspace.exceptions import CloudError
-
+from .forms import PlaylistForm
 
 def files(request):
     if not request.cloud.authenticated:
@@ -84,12 +84,24 @@ def playlist(request):
         return redirect('index')
 
     try:
+        type = request.POST.get('type')
+        page = request.POST.get('page')
+        count = request.POST.get('count')
+        sort = request.POST.get('sort')
         account = request.cloud.account()
-        playlists = request.cloud.playlists('music', '', '10','')
-        get_playlist = request.cloud.get_playlist('757a028c8e2244029c9615d3a45d1822')
-        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account, 'playlist_item': get_playlist})
+        playlists = request.cloud.playlists(type, page, count, sort)
+        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/playlists.html', {error: error})
+
+
+def playlistform(request):
+
+    form = PlaylistForm()
+    get_account = request.cloud.account()
+
+    return render(request, 'explorer/playlistform.html', {'form': form, 'get_account': get_account})
+
 

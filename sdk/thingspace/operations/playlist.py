@@ -1,4 +1,5 @@
 from thingspace.env import Env
+from thingspace.models.factories.playlist_factories import PlaylistFactories
 from thingspace.packages.requests.requests import Request
 from thingspace.exceptions import CloudError, NotFoundError, ConflictError
 
@@ -24,8 +25,15 @@ class Playlists():
             headers=headers, params=params
         ))
 
-        playlist = resp.json()
-        return playlist
+
+        if resp.status_code != 200:
+            raise CloudError("Could not get playlists", response=resp)
+
+        json = resp.json()
+
+        playlists = PlaylistFactories.playlists_from_json(json['playlistDefinitions'].get('playlistDefinition', []))
+
+        return playlists
 
     def get_playlist_definition(self, playlistUid=''):
         if not self.authenticated:

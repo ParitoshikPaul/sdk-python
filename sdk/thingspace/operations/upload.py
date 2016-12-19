@@ -3,7 +3,7 @@ import os
 from thingspace.env import Env
 from thingspace.exceptions import CloudError
 from thingspace.models.upload_intent import UploadIntent
-from thingspace.models.factories.FopsFactories import FopsFactories
+from thingspace.models.factories.fops_factories import FopsFactories
 from thingspace.packages.requests.requests import Request
 from thingspace.packages.requests.requests.packages.urllib3.packages import six
 from thingspace.utils.hasher import Hasher

@@ -8,7 +8,7 @@ from thingspace.packages.requests.requests.packages.urllib3.packages.six.moves i
 from thingspace.env import Env
 from thingspace.exceptions import CloudError, NotFoundError, ConflictError
 from thingspace.exceptions import OutOfSyncError
-from thingspace.models.factories.FopsFactories import FopsFactories
+from thingspace.models.factories.fops_factories import FopsFactories
 from thingspace.packages.requests.requests import Request
 from thingspace.packages.requests.requests.packages.urllib3.packages import six
 from thingspace.utils.path import Path

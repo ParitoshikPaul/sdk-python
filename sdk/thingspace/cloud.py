@@ -3,7 +3,7 @@ from thingspace.env import Env
 from thingspace.exceptions import CloudError
 from thingspace.exceptions import UnauthorizedError
 from thingspace.models.account import Account
-from thingspace.models.factories.FopsFactories import FopsFactories
+from thingspace.models.factories.fops_factories import FopsFactories
 from thingspace.operations.fops import Fops
 from thingspace.operations.oauth import Oauth
 from thingspace.operations.trash import Trash

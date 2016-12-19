@@ -71,10 +71,9 @@ def trash(request, operation=None):
             request.cloud.empty_trash()
         elif operation == 'restore':
             request.cloud.restore(request.POST['path'])
-
-
         files, folders = request.cloud.trash()
         return render(request, 'explorer/trash.html', {'files': files, 'folders': folders})
+
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
@@ -90,8 +89,15 @@ def playlist(request):
         count = request.POST.get('count')
         sort = request.POST.get('sort')
         account = request.cloud.account()
+        uid = request.GET.get('playlist_uid', '')
+        playlist_items = request.cloud.get_playlist_items(uid)
+
+        if uid:
+            return render(request, 'explorer/playlists.html', {"uid": uid, "playlist_items": playlist_items})
         playlists = request.cloud.playlists(type, page, count, sort)
-        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
+        return render(request, 'explorer/playlists.html',
+                      {'playlists': playlists, 'account': account, "uid": uid, "playlist_items": playlist_items})
+
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
@@ -102,7 +108,6 @@ def playlistform(request):
 
     form = PlaylistForm()
     get_account = request.cloud.account()
-
     return render(request, 'explorer/playlistform.html', {'form': form, 'get_account': get_account})
 
 
@@ -114,7 +119,6 @@ def createplaylistform(request):
     paths = request.POST.get('paths')
     type = request.POST.get('type')
     createdplaylist = request.cloud.create_playlist(name, paths, type)
-
     return render(request, 'explorer/createplaylistform.html', {'form': form, 'get_account': get_account, 'createdplaylist': createdplaylist})
 
 

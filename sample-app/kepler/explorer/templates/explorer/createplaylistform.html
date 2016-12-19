@@ -10,7 +10,9 @@
 	<div class="files-header">
 		<h1 class="text-info">Playlists</h1>
 	</div>
-    {{ createdplaylist }}
+    {% if createdplaylist.playlistDefinition %}
+    {{ "<h3 style='color:green; margin:20px;'>Playlist Created Successfully</h3>" }}
+    {% endif %}
  <div class="content-main">
 		<form name="createplaylistform" id="createplaylistform" action="createplaylistform" method="post">
               {% csrf_token %}

@@ -1,6 +1,7 @@
 from thingspace.env import Env
 from thingspace.packages.requests.requests import Request
-
+from thingspace.utils.path import Path
+from thingspace.models.override import Override
 
 
 
@@ -66,4 +67,25 @@ class Playlists():
         return playlist_items
 
 
+    def create_playlist(self, name="", paths="", type=""):
 
+        #add mandatory
+        body = {
+            'name': name,
+            'paths': paths,
+            'type': type,
+        }
+
+
+        resp = self.networker(Request(
+            'POST',
+            Env.api_cloud + '/playlists',
+            json=body,
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        json = resp.json()
+        return json
+        

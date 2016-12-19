@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from thingspace.exceptions import UnauthorizedError
 from thingspace.exceptions import CloudError
 from .forms import PlaylistForm
+from .forms import CreateplaylistForm
 
 def files(request):
     if not request.cloud.authenticated:
@@ -89,12 +90,8 @@ def playlist(request):
         count = request.POST.get('count')
         sort = request.POST.get('sort')
         account = request.cloud.account()
-        uid = request.GET.get('playlist_uid', '')
-        playlist_items = request.cloud.get_playlist_items(uid)
-        if uid:
-            return render(request, 'explorer/playlists.html', {"uid": uid, "playlist_items": playlist_items})
         playlists = request.cloud.playlists(type, page, count, sort)
-        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account, "uid": uid, "playlist_items": playlist_items})
+        return render(request, 'explorer/playlists.html', {'playlists': playlists, 'account': account})
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
@@ -107,5 +104,18 @@ def playlistform(request):
     get_account = request.cloud.account()
 
     return render(request, 'explorer/playlistform.html', {'form': form, 'get_account': get_account})
+
+
+def createplaylistform(request):
+
+    form = CreateplaylistForm()
+    get_account = request.cloud.account()
+    name = request.POST.get('name')
+    paths = request.POST.get('paths')
+    type = request.POST.get('type')
+    createdplaylist = request.cloud.create_playlist(name, paths, type)
+
+    return render(request, 'explorer/createplaylistform.html', {'form': form, 'get_account': get_account, 'createdplaylist': createdplaylist})
+
 
 

@@ -20,24 +20,20 @@
               <div class="progress-bar" style="width: {% percentage account.usage.quota_used account.usage.quota %}%"></div>
           </div>
          <!-- file loop start here -->
-{% if uid %}
-
-    {{ playlist_items }}
-
-{% else %}
-
-	{% for playlist in playlists.playlistDefinitions.playlistDefinition  %}
+	{% for playlist in playlists.playlistDefinitions.playlistDefinition %}
 	<div class="file-row">
-		<a href="/explorer/playlists?playlist_uid={{ playlist.uid }}" class="text-info">
+		<a href="/explorer/playlists/" class="text-info">
 		<i class="material-icons">insert_drive_file</i>
 		{{playlist.name}}
 		</a>
 			<div style="float:right;width: 60%;">
-			<a href="/explorer/playlists?playlist_uid={{ playlist.uid }}">Playlist Items</a>
+			<a href="#" data-toggle="modal" data-target="#create-playlist-dialog" title="Rename Playlist">Update Playlist Definition</a>
+			<a href="#" data-toggle="modal" data-target="#rename-playlist-dialog" title="Rename Playlist">Rename</a>
+			<a href="#">Playlist Definition</a>
+			<a href="#">Delete</a>
 			</div>
 	</div>
 	{% endfor %}
-{% endif %}
 	<!-- end of the file loop start here -->
         </div>
       </div>

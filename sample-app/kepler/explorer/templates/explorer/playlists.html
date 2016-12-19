@@ -22,8 +22,15 @@
          <!-- file loop start here -->
         {% if uid %}
 
-            {{ playlist_items }}
+            {% for playlistitem in playlist_items.playlist.playlistElement %}
 
+                <div class="file-row">
+                <a href="/explorer/playlists?playlist_uid={{ playlistitem.uid }}" class="text-info">
+                <i class="material-icons">insert_drive_file</i>
+                {{playlistitem.title}}
+                </a>
+                </div>
+            {% endfor %}
         {% else %}
 
         {% for playlist in playlists.playlistDefinitions.playlistDefinition  %}
@@ -34,6 +41,8 @@
             </a>
                 <div style="float:right;width: 60%;">
               <a href="/explorer/playlists?playlist_uid={{ playlist.uid }}">Playlist Items</a>
+              <a href="/explorer/playlists?playlist_uid={{ playlist.uid }}">Update Playlist defination</a>
+              <a href="/explorer/playlists?playlist_uid={{ playlist.uid }}">Delete Playlist</a>
                 </div>
         </div>
         {% endfor %}

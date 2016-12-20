@@ -1,7 +1,9 @@
 from thingspace.env import Env
+from thingspace.models.factories.fops_factories import FopsFactories
 from thingspace.models.factories.playlist_factories import PlaylistFactories
 from thingspace.packages.requests.requests import Request
 from thingspace.exceptions import CloudError, NotFoundError, ConflictError
+from thingspace.packages.requests.requests.packages.urllib3.packages.six.moves import urllib
 
 
 class Playlists():
@@ -25,7 +27,6 @@ class Playlists():
             headers=headers, params=params
         ))
 
-
         if resp.status_code != 200:
             raise CloudError("Could not get playlists", response=resp)
 
@@ -35,7 +36,7 @@ class Playlists():
 
         return playlists
 
-    def get_playlist_definition(self, playlistUid=''):
+    def playlist(self, playlist_uid):
         if not self.authenticated:
             return None
 
@@ -44,14 +45,18 @@ class Playlists():
         }
         resp = self.networker(Request(
             'GET',
-            Env.api_url + '/cloud/' + Env.api_version + '/playlists/' + playlistUid,
+            Env.api_url + '/cloud/' + Env.api_version + '/playlists/' + playlist_uid,
             headers=headers
         ))
 
-        playlist_uid = resp.json()
-        return playlist_uid
+        if resp.status_code != 200:
+            raise CloudError("Could not get playlists", response=resp)
 
-    def get_playlist_items(self, playlistUid='', page='', count='', sort=''):
+        json = resp.json()
+        playlist = PlaylistFactories.playlist_from_json(json['playlistDefinition'])
+        return playlist
+
+    def playlist_items(self, playlistUid='', page='', count='', sort=''):
         if not self.authenticated:
             return None
 
@@ -69,26 +74,32 @@ class Playlists():
             headers=headers, params=params
         ))
 
-        playlist_items = resp.json()
-        return playlist_items
+        if resp.status_code != 200:
+            raise CloudError("Could not get playlists", response=resp)
 
-    def get_playlist_items_content(self, playlistUid='', item_uid=''):
+        json = resp.json()
+        files = PlaylistFactories.playlist_items_from_json(self, playlistUid, json['playlist'].get('playlistElement', []))
+        return files
+
+    def playlist_item_download_url(self, playlist_item=None, playlist_uid=None, item_uid=None):
         if not self.authenticated:
             return None
 
-        headers = {
-            "Authorization": "Bearer " + self.access_token
-        }
-        resp = self.networker(Request(
+        if(playlist_item):
+            playlist_uid = playlist_item.playlist_uid
+            item_uid = playlist_item.itemuid
+
+        req = Request(
             'GET',
-            Env.api_url + '/cloud/' + Env.api_version + '/playlists/' + playlistUid + '/items' + item_uid,
-            headers=headers
-        ))
+            Env.api_cloud + '/playlists/' + urllib.parse.quote(playlist_uid) + '/items/' + urllib.parse.quote(item_uid),
+            params={
+                'access-token': self.access_token
+            }
+        )
+        prepped = req.prepare()
+        return prepped.url
 
-        playlist_items_content = resp.json()
-        return playlist_items_content
-
-    def create_playlist(self, name="", paths="", type=""):
+    def create_playlist(self, name, paths, type):
 
         #add mandatory
         body = {

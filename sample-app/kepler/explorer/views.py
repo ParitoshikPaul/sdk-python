@@ -84,25 +84,25 @@ def playlist(request):
         return redirect('index')
 
     try:
-        type = request.POST.get('type')
-        page = request.POST.get('page')
-        count = request.POST.get('count')
-        sort = request.POST.get('sort')
-        account = request.cloud.account()
-        uid = request.GET.get('playlist_uid', '')
-        playlist_items = request.cloud.get_playlist_items(uid)
-
-        if uid:
-            return render(request, 'explorer/playlists.html', {"uid": uid, "playlist_items": playlist_items})
-        playlists = request.cloud.playlists(type, page, count, sort)
-        return render(request, 'explorer/playlists.html',
-                      {'playlists': playlists, 'account': account, "uid": uid, "playlist_items": playlist_items})
-
+        playlists = request.cloud.playlists()
+        return render(request, 'explorer/playlists.html', {'playlists': playlists})
     except UnauthorizedError:
         return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/playlists.html', {error: error})
 
+def playlist_items(request, uid):
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    try:
+        playlist = request.cloud.playlist(uid)
+        items = request.cloud.playlist_items(uid)
+        print(items)
+    except UnauthorizedError:
+        return redirect('logout')
+
+    return render(request, 'explorer/playlist_items.html', {"playlist": playlist, "playlist_items": items})
 
 def playlistform(request):
 

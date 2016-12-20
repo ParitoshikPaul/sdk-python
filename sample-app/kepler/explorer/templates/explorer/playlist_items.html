@@ -10,19 +10,18 @@
       <div class="col-md-10 col-md-offset-2 main">
         {% include "appnav.html" %}
         <div class="files-header">
-          <h1 class="text-info">My Playlists</h1>
+          <h1 class="text-info">{{playlist.name}} </h1>
         </div>
         <div class="content-main">
-            
-        {% for playlist in playlists  %}
+
+        {% for item in playlist_items  %}
         <div class="file-row">
-            <a href="/explorer/playlists/{{ playlist.uid }}" class="text-info">
+            <a href="{{ item.download_url }}" class="text-info">
             <i class="material-icons">insert_drive_file</i>
-            {{playlist.name}}
+            {{item.filename}}
             </a>
         </div>
         {% endfor %}
-	<!-- end of the file loop start here -->
         </div>
       </div>
     </div>

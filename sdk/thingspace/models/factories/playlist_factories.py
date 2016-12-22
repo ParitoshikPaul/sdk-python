@@ -16,11 +16,9 @@ class PlaylistFactories:
             playlists.append(PlaylistFactories.playlist_from_json(playlist))
         return playlists
 
-
     @staticmethod
     def playlist_item_from_json(cloud, playlist_uid, json):
         return PlaylistItem(cloud, playlist_uid, json)
-
 
     @staticmethod
     def playlist_items_from_json(cloud, playlist_uid, json):

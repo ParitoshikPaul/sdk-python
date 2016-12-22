@@ -19,5 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'', include('oauth2.urls')),
     url(r'^explorer/', include('explorer.urls')),
+    url(r'^playlist/', include('playlist.urls')),
     url(r'^admin/', admin.site.urls),
 ]

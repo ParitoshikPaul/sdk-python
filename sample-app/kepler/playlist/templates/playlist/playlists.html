@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load percentage %}
+{% load bytes_human %}
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+      <div class="col-md-10 col-md-offset-2 main">
+        {% include "appnav.html" %}
+        <div class="files-header">
+          <h1 class="text-info">My Playlists</h1>
+        </div>
+        <div class="content-main">
+
+        {% for playlist in playlists  %}
+        <div class="file-row">
+            <a href="/playlist/playlists/{{ playlist.uid }}" class="text-info">
+            <i class="material-icons">insert_drive_file</i>
+            {{playlist.name}}
+            </a>
+        </div>
+        {% endfor %}
+	<!-- end of the file loop start here -->
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

@@ -16,11 +16,16 @@
 
         {% for playlist in playlists  %}
         <div class="file-row">
-            <a href="/playlist/playlists/{{ playlist.uid }}" class="text-info">
+            <a href="/playlist/playlist/{{ playlist.uid }}" class="text-info">
             <i class="material-icons">insert_drive_file</i>
             {{playlist.name}}
             </a>
+         <div style="float:right;width: 60%;">
+            <a href="/playlist/playlists/{{ playlist.uid }}">Playlist Items</a>
+            <a href="/playlist/updateplaylistform/{{ playlist.uid }}">Update Playlist</a>
+            </div>
         </div>
+
         {% endfor %}
 	<!-- end of the file loop start here -->
         </div>

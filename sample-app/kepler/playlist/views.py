@@ -3,8 +3,9 @@ from thingspace.exceptions import UnauthorizedError
 from thingspace.exceptions import CloudError
 from .forms import PlaylistForm
 from .forms import CreateplaylistForm
+from .forms import UpdateplaylistForm
 
-def playlist(request):
+def playlists(request):
     if not request.cloud.authenticated:
         return redirect('index')
 
@@ -51,4 +52,29 @@ def createplaylistform(request):
     createdplaylist = request.cloud.create_playlist(name, paths, type)
     return render(request, 'playlist/createplaylistform.html', {'form': form, 'get_account': get_account, 'createdplaylist': createdplaylist})
 
-# Create your views here.
+
+def playlist(request, uid):
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    try:
+        playlist = request.cloud.playlist(uid)
+        print(playlist)
+    except UnauthorizedError:
+        return redirect('logout')
+
+    return render(request, 'playlist/playlist.html', {"playlist": playlist})
+
+
+def update_playlist_form(request, uid):
+
+    form = UpdateplaylistForm()
+    get_account = request.cloud.account()
+    return render(request, 'playlist/updateplaylistform.html', {'form': form, 'uid': uid })
+
+def update_playlist(request, uid):
+
+    name = request.POST.get('name')
+    type = request.POST.get('type')
+    updated = request.cloud.update_playlist(uid, name, type)
+    return render(request, 'playlist/updateplaylist.html', {'updated': updated })

@@ -10,24 +10,20 @@
 	<div class="files-header">
 		<h1 class="text-info">Playlists</h1>
 	</div>
+    {% if updated %}
+    {{ "<h3 style='color:green; margin:20px;'>Playlist Created Successfully</h3>" }}
+    {% endif %}
+
  <div class="content-main">
-		<form name="playlistform" id="playlistform" action="playlists" method="post">
+		<form name="createplaylistform" id="createplaylistform" action="/playlist/updateplaylist/{{ uid }}" method="post">
               {% csrf_token %}
 			 <div class="form-group">
-				<label for="cursor">Type:</label>
+				<label for="cursor">Name:</label>
+                 {{form.name}}
+			 </div>
+			 <div class="form-group">
+				<label for="count">Type:</label>
                  {{form.type}}
-			 </div>
-			 <div class="form-group">
-				<label for="until">Page:</label>
-                 {{form.page}}
-			 </div>
-			 <div class="form-group">
-				<label for="count">Count:</label>
-                 {{form.count}}
-			 </div>
-			 <div class="form-group">
-				<label for="filter">Sort:</label>
-				{{form.sort}}
 			 </div>
 			 <input type="submit" name="submit" value="submit">
 		</form>

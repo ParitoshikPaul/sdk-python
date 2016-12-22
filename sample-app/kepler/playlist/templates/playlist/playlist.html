@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load percentage %}
+{% load bytes_human %}
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+      <div class="col-md-10 col-md-offset-2 main">
+        {% include "appnav.html" %}
+        <div class="files-header">
+          <h1 class="text-info">{{playlist.name}} </h1>
+        </div>
+        <div class="content-main">
+        <h3>Playlist Defination</h3>
+            <div class="file-row">
+            UID: {{ playlist.name }}
+             </div>
+            <div class="file-row">
+            Type: {{ playlist.type }}
+            </div>
+            <div class="file-row">
+            URI: {{ playlist.uri }}
+            </div>
+            <div class="file-row">
+            UID: {{ playlist.uid }}
+            </div>
+            <div class="file-row">
+            Creation Date: {{ playlist.creation_date }}
+            </div>
+            <div class="file-row">
+            Last Modified Date: {{ playlist.last_modified_date }}
+            </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

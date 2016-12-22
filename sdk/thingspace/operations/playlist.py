@@ -185,14 +185,13 @@ class Playlists():
 
             return
 
-    def update_playlist(self, playlist_uid="", name="", type=""):
+    def update_playlist(self, playlist_uid, name="", type=""):
         if not self.authenticated:
             return None
-            # add mandatory
-            body = {
-                'name': name,
-                'type': type,
-            }
+        body = {
+            'name': name,
+            'type': type
+        }
         resp = self.networker(Request(
             'PUT',
             Env.api_cloud + '/playlists/' + playlist_uid,
@@ -206,32 +205,7 @@ class Playlists():
             raise NotFoundError("Playlist Item not found", response=resp)
 
         if resp.status_code != 200:
-            raise CloudError("Could not update playlist item", response=resp)
+            raise CloudError("Could not delete playlist item", response=resp)
 
-            return
+            return resp.json
 
-    def update_playlist(self, playlist_uid="", name="", paths="", type=""):
-        if not self.authenticated:
-            return None
-            # add mandatory
-            body = {
-                'name': name,
-                'paths': paths,
-                'type': type,
-            }
-        resp = self.networker(Request(
-            'PUT',
-            Env.api_cloud + '/playlists/' + playlist_uid,
-            json=body,
-            headers={
-                "Authorization": "Bearer " + self.access_token
-            }
-        ))
-
-        if resp.status_code == 404:
-            raise NotFoundError("Playlist Item not found", response=resp)
-
-        if resp.status_code != 200:
-            raise CloudError("Could not update playlist item", response=resp)
-
-            return

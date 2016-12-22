@@ -15,7 +15,7 @@
       {{ account }}
         <div class="content-main">
           <h4>
-              <span class="label label-primary">Used </span>
+              <span class="label label-primary">Used {{account.usage.quota_used|bytes_human}} of {{account.usage.quota|bytes_human}}</span>
           </h4>
           <div class="progress progress-striped active mtop30 usage">
               <div class="progress-bar" style="width: {% percentage account.usage.quota_used account.usage.quota %}%"></div>

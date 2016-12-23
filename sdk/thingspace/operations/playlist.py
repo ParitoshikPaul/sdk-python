@@ -209,3 +209,28 @@ class Playlists():
 
             return resp.json
 
+    def update_playlist_def(self, playlist_uid, name="", paths="", type=""):
+        if not self.authenticated:
+            return None
+        body = {
+            'name': name,
+            'paths': paths,
+            'type': type
+        }
+        resp = self.networker(Request(
+            'PUT',
+            Env.api_cloud + '/playlists/' + playlist_uid + '/items',
+            json=body,
+            headers={
+                "Authorization": "Bearer " + self.access_token
+            }
+        ))
+
+        if resp.status_code == 404:
+            raise NotFoundError("Playlist Item not found", response=resp)
+
+        if resp.status_code != 200:
+            raise CloudError("Could not delete playlist item", response=resp)
+
+            return resp.json
+

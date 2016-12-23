@@ -14,3 +14,8 @@ class CreateplaylistForm(forms.Form):
 class UpdateplaylistForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'id': 'count', 'class': 'form_control'}), max_length=100, required=False)
     type = forms.CharField(widget=forms.TextInput(attrs={'id': 'type', 'class': 'form_control'}), max_length=100, required=False)
+
+class UpdateplaylistdefForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'id': 'count', 'class': 'form_control'}), max_length=100, required=False)
+    paths = forms.CharField(widget=forms.TextInput(attrs={'id': 'type', 'class': 'form_control'}), max_length=100, required=False)
+    type = forms.CharField(widget=forms.TextInput(attrs={'id': 'type', 'class': 'form_control'}), max_length=100, required=False)

@@ -4,6 +4,7 @@ from thingspace.exceptions import CloudError
 from .forms import PlaylistForm
 from .forms import CreateplaylistForm
 from .forms import UpdateplaylistForm
+from .forms import UpdateplaylistdefForm
 
 def playlists(request):
     if not request.cloud.authenticated:
@@ -69,7 +70,6 @@ def playlist(request, uid):
 def update_playlist_form(request, uid):
 
     form = UpdateplaylistForm()
-    get_account = request.cloud.account()
     return render(request, 'playlist/updateplaylistform.html', {'form': form, 'uid': uid })
 
 def update_playlist(request, uid):
@@ -78,3 +78,27 @@ def update_playlist(request, uid):
     type = request.POST.get('type')
     updated = request.cloud.update_playlist(uid, name, type)
     return render(request, 'playlist/updateplaylist.html', {'updated': updated })
+
+def delete_playlist(request, uid):
+
+    deleted = request.cloud.delete_playlist(uid)
+    return render(request, 'playlist/deleteplaylist.html', {'deleted': deleted })
+
+def delete_playlist_item(request, uid, item_uid):
+
+    deleted = request.cloud.delete_playlist_item(uid, item_uid)
+    return render(request, 'playlist/deleteplaylist.html', {'deleted': deleted })
+
+def update_playlist_def_form(request, uid):
+
+    form = UpdateplaylistdefForm()
+    return render(request, 'playlist/updateplaylistdefform.html', {'form': form, 'uid': uid})
+
+
+def update_playlist_def(request, uid):
+
+    name = request.POST.get('name')
+    paths = request.POST.get('paths')
+    type = request.POST.get('type')
+    updated_def = request.cloud.update_playlist_def(uid, name, paths, type)
+    return render(request, 'playlist/updateplaylist.html', {'updated_def': updated_def })

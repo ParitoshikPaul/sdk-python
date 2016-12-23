@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-md-2 side">
+        {% include "sidenav.html" %}
+      </div>
+<div class="col-md-10 col-md-offset-2 main">
+    {% include "appnav.html" %}
+	<div class="files-header">
+		<h1 class="text-info">Playlists</h1>
+	</div>
+    {% if updated_def == None %}
+    {{ "<h3 style='color:green; margin:20px;'>Playlist Item Updated Successfully</h3>" }}
+    {% endif %}
+
+</div>
+</div>
+</div>
+{% endblock %}

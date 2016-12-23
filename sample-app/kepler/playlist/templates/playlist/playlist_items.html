@@ -13,13 +13,15 @@
           <h1 class="text-info">{{playlist.name}} </h1>
         </div>
         <div class="content-main">
-
         {% for item in playlist_items  %}
         <div class="file-row">
             <a href="{{ item.download_url }}" class="text-info">
             <i class="material-icons">insert_drive_file</i>
             {{item.filename}}
             </a>
+        <div style="float:right;width: 60%;">
+            <a href="/playlist/deleteplaylistitem/{{ playlist.uid }}/{{ item.itemuid }}">Delete Item</a>
+            </div>
         </div>
         {% endfor %}
         </div>

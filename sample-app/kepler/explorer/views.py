@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from thingspace.exceptions import UnauthorizedError
 from thingspace.exceptions import CloudError
+from .forms import ContactsForm
 
 def files(request):
     if not request.cloud.authenticated:
@@ -76,6 +77,31 @@ def trash(request, operation=None):
         return redirect('logout')
     except CloudError as error:
         return render(request, 'explorer/trash.html', {error: error})
+
+def contacts_form(request):
+
+    form = ContactsForm()
+    get_account = request.cloud.account()
+    return render(request, 'explorer/contactsform.html', {'form': form, 'get_account': get_account})
+
+def contacts(request):
+
+    if not request.cloud.authenticated:
+        return redirect('index')
+
+    try:
+        page = request.POST.get('page')
+        count = request.POST.get('count')
+        sort = request.POST.get('sort')
+        account = request.cloud.account()
+        contacts = request.cloud.contacts(page, count, sort)
+        return render(request, 'explorer/contacts.html', {'contacts': contacts})
+    except UnauthorizedError:
+        return redirect('logout')
+    except CloudError as error:
+        return render(request, 'explorer/contacts.html', {error: error})
+
+    return
 
 
 

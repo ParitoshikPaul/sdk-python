@@ -123,13 +123,13 @@ class Playlists():
         json = resp.json()
         return json
 
-    def create_playlist_items(self, playlist_uid="",  playlistItems=""):
+    def create_playlist_items(self, playlist_uid="",  playlistItems=[]):
         if not self.authenticated:
             return None
 
         #add mandatory
         body = {
-            'add': [playlistItems]
+            'add': playlistItems
         }
 
 

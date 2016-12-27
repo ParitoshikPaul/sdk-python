@@ -128,3 +128,29 @@ class Cloud(Oauth, Upload, Fops, Trash, Playlists):
             raise CloudError('Network error')
 
         return resp
+
+
+    def contacts(self, page='', count='', sort=''):
+        if not self.authenticated:
+            return None
+
+        headers = {
+            "Authorization": "Bearer " + self.access_token
+        }
+        params = {
+            "page": page,
+            "count": count,
+            "sort": sort,
+        }
+        resp = self.networker(Request(
+            'GET',
+            Env.api_url + '/cloud/' + Env.api_version + '/contacts',
+            headers=headers, params=params
+        ))
+
+        if resp.status_code != 200:
+            raise CloudError("Could not get contacts", response=resp)
+
+        json = resp.json()
+
+        return json

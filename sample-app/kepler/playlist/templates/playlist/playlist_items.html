@@ -13,6 +13,9 @@
           <h1 class="text-info">{{playlist.name}} </h1>
         </div>
         <div class="content-main">
+        {% if playlist.errors %}
+        {{ "<h4 style='color:red; margin:20px;'>ERROR"}} {{ playlist.errors.error_code }}{{ ":" }} {{ playlist.errors.error_description }}  {{ "</h4>" }}
+        {% endif %}
         {% for item in playlist_items  %}
         <div class="file-row">
             <a href="{{ item.download_url }}" class="text-info">

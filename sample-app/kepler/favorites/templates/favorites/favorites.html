@@ -13,20 +13,18 @@
           <h1 class="text-info">My Playlists</h1>
         </div>
         <div class="content-main">
-        {% if playlist.errors %}
-         {{ "<h4 style='color:red; margin:20px;'>ERROR"}} {{ playlist.errors.error_code }}{{ ":" }} {{ playlist.errors.error_description }}  {{ "</h4>" }}
+        {% if favorites.errors %}
+         {{ "<h4 style='color:red; margin:20px;'>ERROR"}} {{ favorites.errors.error_code }}{{ ":" }} {{ favorites.errors.error_description }}  {{ "</h4>" }}
         {% endif %}
-        {% for playlist in playlists  %}
+        {% for favorite in  favorites.favorites.file   %}
         <div class="file-row">
-            <a href="/playlist/playlist/{{ playlist.uid }}" class="text-info">
+            <a href="#" class="text-info">
             <i class="material-icons">insert_drive_file</i>
-            {{playlist.name}}
+            {{favorite.name}}
             </a>
          <div style="float:right;width: 60%;">
-            <a href="/playlist/playlists/{{ playlist.uid }}">Playlist Items</a> ||
-            <a href="/playlist/updateplaylistform/{{ playlist.uid }}">Rename</a> ||
-            <a href="/playlist/updateplaylistform/{{ playlist.uid }}">Update Playlist Defination</a> ||
-            <a href="/playlist/deleteplaylist/{{ playlist.uid }}">Delete Playlist</a> ||
+            <a href="updatefavoritesform">Update favorite</a> ||
+            <a href="deletefavoritesform">Delete favorite</a>
             </div>
         </div>
 

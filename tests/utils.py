@@ -66,5 +66,10 @@ class Utils:
             Utils.assert_is_folder(unit_tester, folder)
 
 
+    @staticmethod
+    def assert_is_playlist(unit_tester, playlist):
+        for playlist in playlist:
+            Utils.assert_is_file(unit_tester, playlist)
+
 
 

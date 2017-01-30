@@ -10,6 +10,9 @@
 	<div class="files-header">
 		<h1 class="text-info">Playlists</h1>
 	</div>
+    {% if deleted.errors %}
+    {{ "<h4 style='color:red; margin:20px;'>ERROR"}} {{ deleted.errors.error_code }}{{ ":" }} {{ deleted.errors.error_description }}  {{ "</h4>" }}
+    {% endif %}
     {% if deleted == None %}
     {{ "<h3 style='color:green; margin:20px;'>Playlist Item Deleted Successfully</h3>" }}
     {% endif %}

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'explorer.apps.ExplorerConfig',
     'oauth2.apps.Oauth2Config',
     'playlist.apps.PlaylistConfig',
+    'favorites.apps.FavoritesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

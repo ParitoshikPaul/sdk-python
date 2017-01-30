@@ -10,6 +10,9 @@
 	<div class="files-header">
 		<h1 class="text-info">Playlists</h1>
 	</div>
+    {% if updated_def.errors %}
+    {{ "<h4 style='color:red; margin:20px;'>ERROR"}} {{ updated_def.errors.error_code }}{{ ":" }} {{ updated_def.errors.error_description }}  {{ "</h4>" }}
+    {% endif %}
     {% if updated_def == None %}
     {{ "<h3 style='color:green; margin:20px;'>Playlist Item Updated Successfully</h3>" }}
     {% endif %}
